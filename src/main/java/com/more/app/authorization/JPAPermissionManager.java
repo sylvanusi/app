@@ -119,7 +119,8 @@ public class JPAPermissionManager extends AbstractPermissionManager {
         parameters.put("typeAllow", PermissionType.ALLOW);
         parameters.put("typeAllowAll", PermissionType.ALLOW_ALL);
 
-        Long count = repository.countForAuthorization(resource.getIdentifier(), action);
+        Long count = 0L;
+        		//repository.countForAuthorization(resource.getIdentifier(), action);
 
         return count > 0 ? true : false;
     }
@@ -228,7 +229,7 @@ public class JPAPermissionManager extends AbstractPermissionManager {
 
     public void removeAllPermissions(Role role, Resource resource) {
         checkRoleAndResourceNotNull(role, resource);
-        repository.deleteByRoleAndByResource(role.getIdentifier(), resource.getIdentifier());
+        //repository.deleteByRoleAndByResource(role.getIdentifier(), resource.getIdentifier());
     }
 
     public void removePermission(Role role, String action, Resource resource) {

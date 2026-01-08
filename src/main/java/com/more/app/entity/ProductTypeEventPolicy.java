@@ -1,7 +1,7 @@
 package com.more.app.entity;
 
-import com.more.app.annotations.Auditable;
-import com.more.app.annotations.UIAction;
+import com.more.app.util.annotations.Auditable;
+import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

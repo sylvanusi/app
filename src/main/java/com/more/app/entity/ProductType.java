@@ -1,7 +1,9 @@
 package com.more.app.entity;
 
-import com.more.app.annotations.Auditable;
-import com.more.app.annotations.UIAction;
+import org.hibernate.annotations.Formula;
+
+import com.more.app.util.annotations.Auditable;
+import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,11 +28,16 @@ public class ProductType extends AbstractPojo
 	
 	@Auditable(enableAudit=true, fieldNo=6)
 	@UIAction(label = "Module",errorlabel="Module is required")
-	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@Transient
 	private ProductModule module;
 	
+	@Auditable(enableAudit=true, fieldNo=6)
 	@UIAction(label = "Module",errorlabel="Module is required")
-	@Transient
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private Long moduleId;
+	
+	@UIAction(label = "Module",errorlabel="Module is required")
+	@Formula("(select a.name from ProductModule a where a.id = module_Id)")
 	private String moduleName;
 
 	/**

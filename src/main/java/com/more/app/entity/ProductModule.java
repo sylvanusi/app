@@ -1,16 +1,13 @@
 package com.more.app.entity;
 
-import com.more.app.annotations.Auditable;
-import com.more.app.annotations.UIAction;
+import com.more.app.util.annotations.Auditable;
+import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(
-	    name = "ProductModule.findAllOrderedDesc",
-	    query = "SELECT p FROM ProductModule p order by p.code, p.name asc")
 public class ProductModule extends AbstractPojo
 {
 	private static final long serialVersionUID = 1233419975551454813L;

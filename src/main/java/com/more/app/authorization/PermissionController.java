@@ -39,7 +39,8 @@ public class PermissionController {
 		String query = "SELECT p FROM AppRole p WHERE p.id = :id";
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", user.getRoleId());
-		AppRole role = (AppRole) FacadeFactory.getFacade().find(query, parameters);
+		AppRole role = null;
+				//(AppRole) FacadeFactory.getFacade().find(query, parameters);
 		return role;
 	}
 
@@ -54,12 +55,14 @@ public class PermissionController {
 		String query = "SELECT p FROM PermissionEntity p WHERE p.role = :role";
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("role", role);
-		List<PermissionEntity> permEntity = FacadeFactory.getFacade().list(query, parameters);
+		List<PermissionEntity> permEntity = null;
+				//FacadeFactory.getFacade().list(query, parameters);
 		for (PermissionEntity perm : permEntity) {
 			long id = Long.parseLong(perm.getResource());
 			PermissionType type = perm.getType();
 			if (type.equals(PermissionType.ALLOW)) {
-				AppResource res = FacadeFactory.getFacade().find(AppResource.class, Long.valueOf(id));
+				AppResource res = null;
+						//FacadeFactory.getFacade().find(AppResource.class, Long.valueOf(id));
 				if (res != null && res.getModuleName().equals(module)) {
 					retval = true;
 					break;
@@ -82,7 +85,8 @@ public class PermissionController {
 			parameters.put("typeAllow", PermissionType.ALLOW);
 			parameters.put("typeAllowAll", PermissionType.ALLOW_ALL);
 
-			Long count = FacadeFactory.getFacade().count(PermissionEntity.class, whereClause, parameters);
+			Long count = 0L;
+					//FacadeFactory.getFacade().count(PermissionEntity.class, whereClause, parameters);
 
 			return count > 0 ? true : false;
 		}

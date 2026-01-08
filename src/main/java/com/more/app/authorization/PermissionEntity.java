@@ -1,8 +1,8 @@
 package com.more.app.authorization;
 
-import com.more.app.annotations.UIAction;
 import com.more.app.entity.AbstractPojo;
 import com.more.app.entity.AppResource;
+import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

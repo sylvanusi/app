@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.more.app.annotations.Auditable;
-import com.more.app.annotations.UIAction;
+import com.more.app.util.annotations.Auditable;
+import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -9,7 +9,7 @@ import com.more.app.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	
 	User findByUsername(String username);
-	@Query("select count(p) from PermissionEntity where p.resource = :resource AND ((p.action = :action AND p.type = ALLOW) OR (p.type = ALLOW_ALL))")
+	@Query("select count(p) from PermissionEntity p where p.resource = :resource AND ((p.action = :action AND p.type = ALLOW) OR (p.type = ALLOW_ALL))")
 	String findByUsernameString(@Param("username") String username);
 }
 

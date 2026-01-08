@@ -58,6 +58,7 @@ C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\AccountTypeCrudView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\AccountTypeView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\AccountView.java
+C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\AppRoleCrudView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\AppRoleView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\BankCrudView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\BankView.java
@@ -81,7 +82,8 @@ C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\PermissionEntityView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\PermissionsView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\ProductConfigurationView.java
-C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\ProductModuleView.java
+C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\productsetup\ProductModuleCrudView.java
+C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\productsetup\ProductModuleView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\ProductTypeEventView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\ProductTypeView.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\entity\ui\RegisterView.java
@@ -104,5 +106,6 @@ C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\repositor
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\repository\HolidayRepository.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\repository\ParametersRepository.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\repository\PermissionEntityRepository.java
+C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\repository\productsetup\ProductModuleRepository.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\repository\SwiftBicRepository.java
 C:\Users\syl-ventures\eclipse-workspace\app\src\main\java\com\more\app\repository\UserRepository.java
