@@ -1,11 +1,16 @@
 package com.more.app.entity;
 
+
+
+import org.hibernate.annotations.Formula;
+
 import com.more.app.util.annotations.Auditable;
 import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Transient;
 
 @Entity
 public class ProductTypeEventPolicy extends AbstractPojo
@@ -13,9 +18,18 @@ public class ProductTypeEventPolicy extends AbstractPojo
 	private static final long serialVersionUID = 2864096572258498667L;
 
 	@UIAction(label = "Event",errorlabel="Event is mandatory")
-	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@Transient
 	@Auditable(enableAudit=true, fieldNo=4)
 	private ProductTypeEvent event;
+	
+	@UIAction(label = "Event",errorlabel="Event is mandatory")
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@Auditable(enableAudit=true, fieldNo=4)
+	private Long eventId;
+	
+	@UIAction(label = "Event",errorlabel="Event is mandatory")
+	@Formula("(select a.eventCode from Product_Type_Event a where a.id = event_Id)") 
+	private String eventCode;
 	
 	@UIAction(label = "Policy Class",errorlabel="Policy Class is mandatory")
 	@Column(nullable = false)

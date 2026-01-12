@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.more.app.entity.AccountOfficer;
 import com.more.app.entity.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {

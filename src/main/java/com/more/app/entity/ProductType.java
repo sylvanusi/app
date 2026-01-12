@@ -8,7 +8,6 @@ import com.more.app.util.annotations.UIAction;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -37,7 +36,7 @@ public class ProductType extends AbstractPojo
 	private Long moduleId;
 	
 	@UIAction(label = "Module",errorlabel="Module is required")
-	@Formula("(select a.name from ProductModule a where a.id = module_Id)")
+	@Formula("(select a.name from Product_Module a where a.id = module_Id)")
 	private String moduleName;
 
 	/**

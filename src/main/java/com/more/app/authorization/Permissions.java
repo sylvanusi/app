@@ -3,6 +3,7 @@ package com.more.app.authorization;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.more.app.Application;
 import com.vaadin.flow.component.UI;
 
 

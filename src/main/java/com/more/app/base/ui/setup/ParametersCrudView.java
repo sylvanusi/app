@@ -11,7 +11,6 @@ import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextField.TextFieldI18n;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;

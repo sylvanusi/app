@@ -9,7 +9,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -33,10 +33,10 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 	protected Button editb = new Button("Edit", new Icon(VaadinIcon.EDIT));
 	protected Button viewb = new Button("View", new Icon(VaadinIcon.EYE));
 	protected Button searchb = new Button("Search", new Icon(VaadinIcon.SEARCH));
-	protected Button select = new Button("Select Item", new Icon(VaadinIcon.SELECT));
+	public Button select = new Button("Select Item", new Icon(VaadinIcon.SELECT));
 	protected DialogSelectEntity dialogSelectEntity;
 	protected Dialog dg;
-	protected H1 title = new H1();
+	protected H4 title = new H4();
 	protected boolean hasDialogue = false;
 	protected BaseView<T> view;
 	private JpaRepository<T, Long> repository;
@@ -50,6 +50,7 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 
 		setHeight("100%");
 		setWidthFull();
+
 		getStyle().set("overflow-y", "auto");
 	}
 
@@ -67,6 +68,14 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		this.dg = dg;
 		hasDialogue = true;
 		this.repository = repository;
+		loadComponents();
+	}
+	
+	public BaseView(Dialog dg,JpaRepository<T, Long> repository)
+	{
+		this.dg = dg;
+		this.repository = repository;
+		hasDialogue = true;
 		loadComponents();
 	}
 
@@ -97,6 +106,10 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		
 		VerticalLayout innerVl = new VerticalLayout();
 		innerVl.getElement().getStyle().set("background-color", "white");
+		
+		  
+		  hr.getElement().getStyle().set("border-top", "1.0px solid #000000");
+
 
 		addb.getClassNames().add("searchbuttonadd");
 		editb.getClassNames().add("searchbuttonedit");
@@ -107,14 +120,13 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		grid.addThemeVariants(GridVariant.AURA_COLUMN_BORDERS, GridVariant.LUMO_COMPACT);
 		grid.addThemeVariants(GridVariant.AURA_ROW_STRIPES);
 		//grid.getElement().getStyle().set("border", "0.5px bold #e6f5ff");
-		grid.getElement().getStyle().set("backgroung-color", "black");
 		grid.addClassName(PAGE_MODE_ADD);
 
 		//grid.getClassNames().add("appgrid");
 		
 
-		hlsearch.getElement().getStyle().set("border", "0.5px solid #e6f5ff");
-		hl.getElement().getStyle().set("border", "0.5px solid #e6f5ff");
+		hlsearch.getElement().getStyle().set("border", "0.5px solid #e0b5b1");
+		hl.getElement().getStyle().set("border", "0.5px solid #e0b5b1");
 
 		hlsearch.getElement().getStyle().set("margin-top", "1em");
 		hlsearch.getElement().getStyle().set("padding-top", "0em");

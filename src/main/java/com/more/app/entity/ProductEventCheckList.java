@@ -1,21 +1,28 @@
 package com.more.app.entity;
 
+import org.hibernate.annotations.Formula;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Transient;
 
 @Entity
 public class ProductEventCheckList extends AbstractPojo
 {	
-	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private static final long serialVersionUID = 1L;
+	@Transient
+	private Product product;
+	private Long productId;
+	
+	@Transient
 	private ProductTypeEvent event;
+	private Long eventId;
 	private boolean defineCharges;
 	private boolean definePosting;
 	private boolean configureSwift;
 	private boolean defineDocument;
 	private boolean configureWorklow;
 	
-	@Transient
+	@Formula("(select a.event_Code from Product_Type_Event a where a.id = event_Id)")
 	private String eventName;
 	
 	/**
@@ -118,4 +125,25 @@ public class ProductEventCheckList extends AbstractPojo
 	{
 		this.eventName = eventName;
 	}
+	public Long getEventId() {
+		return eventId;
+	}
+	public void setEventId(Long eventId) {
+		this.eventId = eventId;
+	}
+	public Product getProduct() {
+		return product;
+	}
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	public Long getProductId() {
+		return productId;
+	}
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+	
+	
+	
 }

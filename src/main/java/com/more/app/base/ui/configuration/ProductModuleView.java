@@ -41,6 +41,12 @@ public class ProductModuleView extends BaseView<ProductModule>
 	{
 		super(dialog,dg);
 	}
+	
+	public <T> ProductModuleView(Dialog dg,ProductModuleRepository moduleRepo)
+	{
+		super(dg,moduleRepo);
+		this.repository = (ProductModuleRepository) moduleRepo;
+	}
 
 	public void loadComponents()
 	{		

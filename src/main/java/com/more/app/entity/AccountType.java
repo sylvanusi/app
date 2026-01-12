@@ -5,7 +5,6 @@ import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.NamedQuery;
 
 @Entity
 public class AccountType extends AbstractPojo

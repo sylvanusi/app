@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.Formula;
+
 import com.more.app.util.annotations.Auditable;
 import com.more.app.util.annotations.UIAction;
 
@@ -12,15 +14,12 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 
 @Entity
-@NamedQuery(
-	    name = "Product.findAllOrderedDesc",
-	    query = "SELECT p FROM Product p order by p.productCode asc")
 public class Product extends AbstractPojo
 {
 	@Auditable(enableAudit=true, fieldNo=6)
@@ -40,23 +39,46 @@ public class Product extends AbstractPojo
 	
 	@Auditable(enableAudit=true, fieldNo=9)
 	@UIAction(label = "Product Type",errorlabel="Product Type is required")
-	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@Transient
 	private ProductType type;
+	
+	@Auditable(enableAudit=true, fieldNo=9)
+	@UIAction(label = "Product Type",errorlabel="Product Type is required")
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private Long typeId;
+	
+	@UIAction(label = "Product Type",errorlabel="Product Type is required")
+	@Formula("(select a.product_Type from Product_Type a where a.id = type_Id)")
+	private String typeCode;
 	
 	@UIAction(label = "Module",errorlabel="Module is required")
 	@Transient 
 	private ProductModule module;
+	
+	@UIAction(label = "Module",errorlabel="Module is required")
+	@Formula("(select a.code from Product_Module a, Product_Type b where a.id = b.module_Id and b.id = type_Id)")
+	private String moduleCode;
 	
 	@Auditable(enableAudit=true, fieldNo=10)
 	@UIAction(label = "Status",errorlabel="Status is mandatory")
 	@Column(nullable = true, length =1)
 	private String status = "I";
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ProductEventCheckList> productEventCheckList = new HashSet<>();
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> allowedCurrencies = new ArrayList<>();
+	
+	@Auditable(enableAudit=true, fieldNo=11)
+	@UIAction(label = "Last Sequence No",errorlabel="Last Sequence No is mandatory")
+	@Column(nullable = true, length =16)
+	private Long lastSequenceNumber = 0L;
+	
+	@Auditable(enableAudit=true, fieldNo=11)
+	@UIAction(label = "Reference Length",errorlabel="Reference Length No is mandatory")
+	@Column(nullable = false)
+	private int referenceLength = 0;
 
 	public String getProductCode()
 	{
@@ -136,5 +158,45 @@ public class Product extends AbstractPojo
 
 	public void setAllowedCurrencies(List<String> allowedCurrencies) {
 		this.allowedCurrencies = allowedCurrencies;
+	}
+
+	public Long getLastSequenceNumber() {
+		return lastSequenceNumber;
+	}
+
+	public void setLastSequenceNumber(Long lastSequenceNumber) {
+		this.lastSequenceNumber = lastSequenceNumber;
+	}
+
+	public int getReferenceLength() {
+		return referenceLength;
+	}
+
+	public void setReferenceLength(int referenceLength) {
+		this.referenceLength = referenceLength;
+	}
+
+	public Long getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
+	}
+
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
+	}
+
+	public String getModuleCode() {
+		return moduleCode;
+	}
+
+	public void setModuleCode(String moduleCode) {
+		this.moduleCode = moduleCode;
 	}
 }

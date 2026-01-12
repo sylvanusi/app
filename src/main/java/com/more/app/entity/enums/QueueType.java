@@ -3,8 +3,6 @@ package com.more.app.entity.enums;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.commons.compress.utils.Lists;
-
 public enum QueueType
 {
 	INPUT("Input", 0), UPDATE("Update", 1), REVIEW("Review", 2), APPROVAL("Approval", 3);

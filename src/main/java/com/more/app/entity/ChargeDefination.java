@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.Formula;
+
 import com.more.app.util.annotations.Auditable;
 import com.more.app.util.annotations.UIAction;
 
@@ -21,25 +23,36 @@ import jakarta.persistence.Transient;
 public class ChargeDefination extends AbstractPojo
 {
 	@UIAction(label = "Bank", errorlabel = "Bank is mandatory")
+	@Auditable(enableAudit = true, fieldNo = 4)
+	@Transient
+	private Bank bank;
+	
+	@UIAction(label = "Bank", errorlabel = "Bank is mandatory")
 	@JoinColumn(nullable = false, referencedColumnName = "id")
 	@Auditable(enableAudit = true, fieldNo = 4)
-	private Bank bank;
+	private Long bankId;
 
 	@UIAction(label = "Bank", errorlabel = "Bank is mandatory")
-	@Transient
+	@Formula("(select a.name from bank a where a.id = bank_Id)") 
 	private String bankName;
 
 	@UIAction(label = "Account Type", errorlabel = "Account Type is mandatory")
-	@JoinColumn(nullable = false, referencedColumnName = "id")
+	@Transient
 	@Auditable(enableAudit = true, fieldNo = 5)
 	private AccountType accountType;
+	
+	
+	@UIAction(label = "Account Type", errorlabel = "Account Type is mandatory")
+	@JoinColumn(nullable = false, referencedColumnName = "id")
+	@Auditable(enableAudit = true, fieldNo = 5)
+	private Long accountTypeId;
 
 	@UIAction(label = "Account Type", errorlabel = "Account Type is mandatory")
-	@Transient
+	@Formula("(select a.code from account_type a where a.id = account_Type_Id)") 
 	private String accountTypeCode;
 
 	@UIAction(label = "Account Type", errorlabel = "Account Type is mandatory")
-	@Transient
+	@Formula("(select a.description from account_type a where a.id = account_Type_Id)") 
 	private String accountTypeDesc;
 
 	@UIAction(label = "Charge Name", errorlabel = "Charge Name is mandatory")
@@ -134,9 +147,14 @@ public class ChargeDefination extends AbstractPojo
 
 
 	@UIAction(label = "Tax Charge", errorlabel = "Tax Charge is mandatory")
-	//@Column(nullable = true)
+	@Transient
 	@Auditable(enableAudit = true, fieldNo = 56)
 	private ChargeDefination taxChargeDef;
+	
+	@UIAction(label = "Tax Charge", errorlabel = "Tax Charge is mandatory")
+	@JoinColumn(nullable = false, referencedColumnName = "id")
+	@Auditable(enableAudit = true, fieldNo = 56)
+	private Long taxChargeDefId;
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	@Auditable(enableAudit = false, fieldNo = 57)

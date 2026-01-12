@@ -1,13 +1,14 @@
 package com.more.app.entity;
 
 
+import org.hibernate.annotations.Formula;
+
 import com.more.app.util.annotations.Auditable;
 import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -27,11 +28,16 @@ public class ProductTypeEvent extends AbstractPojo
 	
 	@Auditable(enableAudit=true, fieldNo=6)
 	@UIAction(label = "Product Type",errorlabel="Product Type is required")
-	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@Transient
 	private ProductType productType;
 	
+	@Auditable(enableAudit=true, fieldNo=6)
+	@UIAction(label = "Product Type",errorlabel="Product Type is required")
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private Long productTypeId;
+	
 	@UIAction(label = "Product Type",errorlabel="Module is required")
-	@Transient 
+	@Formula("(select a.product_Type from Product_Type a where a.id = product_Type_Id)") 
 	private String productTypeDisplay;
 	
 	@UIAction(label = "Event Order",errorlabel="Event Order is mandatory")

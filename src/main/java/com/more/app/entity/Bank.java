@@ -8,7 +8,6 @@ import com.more.app.util.annotations.UIAction;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Transient;
 
 @Entity

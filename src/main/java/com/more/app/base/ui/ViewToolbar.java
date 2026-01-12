@@ -1,5 +1,7 @@
 package com.more.app.base.ui;
 
+import org.jspecify.annotations.Nullable;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -7,7 +9,6 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import org.jspecify.annotations.Nullable;
 
 public final class ViewToolbar extends Composite<HorizontalLayout> {
 

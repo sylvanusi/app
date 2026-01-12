@@ -10,7 +10,6 @@ import com.more.app.base.ui.BaseView;
 import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
 import com.more.app.entity.Parameters;
-import com.more.app.repository.CurrencyRepository;
 import com.more.app.repository.ParametersRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;

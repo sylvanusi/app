@@ -1,6 +1,5 @@
 package com.more.app.entity;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.Formula;

@@ -11,7 +11,6 @@ import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
 import com.more.app.entity.AccountOfficer;
 import com.more.app.repository.AccountOfficerRepository;
-import com.more.app.repository.CustomerRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.dialog.Dialog;

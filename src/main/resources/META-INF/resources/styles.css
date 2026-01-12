@@ -18,8 +18,22 @@ vaadin-grid-background {
 } */
 
 html {
+    color-scheme: light dark;
   --aura-background-color-light: #ffffff;
   --aura-font-family: Verdana;
   --aura-base-font-size: 12;
-  --aura-base-radius: 5;
+  --aura-base-radius: 3;
+    --aura-app-layout-inset: 0px;
+  --aura-contrast-level: 10;
+  --aura-base-size: 10;
+  
+ /* background-image: url("images/background.png"); background-size: contain; background-position: center; background-repeat: no-repeat;*/
+}
+
+vaadin-grid::part(selected-row){
+	background: #e8dbda;
+}
+
+vaadin-grid::part(header-cell){
+	background: #e0b5b1;
 }

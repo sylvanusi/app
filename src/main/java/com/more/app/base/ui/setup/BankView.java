@@ -11,7 +11,6 @@ import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
 import com.more.app.entity.Bank;
 import com.more.app.repository.BankRepository;
-import com.more.app.repository.CurrencyRepository;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.textfield.TextField;

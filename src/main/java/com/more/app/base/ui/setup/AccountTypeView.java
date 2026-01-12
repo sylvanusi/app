@@ -10,7 +10,6 @@ import com.more.app.base.ui.BaseView;
 import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
 import com.more.app.entity.AccountType;
-import com.more.app.repository.AccountRepository;
 import com.more.app.repository.AccountTypeRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
@@ -51,6 +50,13 @@ public class AccountTypeView extends BaseView<AccountType>
 	{
 		super(dialog, dg);
 		this.forIncome = forIncome;
+	}
+	
+	public AccountTypeView(DialogSelectEntity dialog, Dialog dg, boolean forIncome, AccountTypeRepository accountTypeRepository)
+	{
+		super(dialog, dg);
+		this.forIncome = forIncome;
+		this.accountTypeRepository = accountTypeRepository;
 	}
 	
 	
