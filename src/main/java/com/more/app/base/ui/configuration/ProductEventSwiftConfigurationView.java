@@ -8,11 +8,13 @@ import com.more.app.entity.Product;
 import com.more.app.entity.ProductEventSwift;
 import com.more.app.entity.ProductTypeEvent;
 import com.more.app.entity.enums.SwiftMessageType;
+import com.more.app.repository.productsetup.ProductEventSwiftRepository;
+import com.more.app.repository.productsetup.ProductTypeEventRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -20,6 +22,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.TextRenderer;
 
@@ -31,11 +34,13 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 
 	private Binder<Product> binder = new Binder<>(Product.class);
 	private Button addBtn;
-	private H1 swiftFieldlbl = new H1("Product Swift Event Configuration");
-	private H1 eventlbl = new H1("Events");
+	private H5 swiftFieldlbl = new H5("Product Swift Event Configuration");
+	private H5 eventlbl = new H5("Events");
 	private RadioButtonGroup<ProductTypeEvent> eventRB;
-	//private ProductTypeEventDAO productTypeEventDAO = new ProductTypeEventDAO();
 	private Product entity;
+	private ProductEventSwiftRepository repository;
+	private ProductTypeEventRepository productTypeEventRepo;
+
 
 	public ProductEventSwiftConfigurationView()
 	{
@@ -44,9 +49,15 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 
 		eventRB = new RadioButtonGroup<>();
 		eventRB.setRenderer(new TextRenderer<>(ProductTypeEvent::getEventDescription));
+		eventRB.addThemeVariants(RadioGroupVariant.AURA_HORIZONTAL);
 
+		Hr hr1 = new Hr();
+		hr1.setSizeFull();
+		Hr hr2 = new Hr();
+		hr2.setSizeFull();
+		
 		addBtn = new Button("Add Swift Message");
-		add(eventlbl, eventRB, new Hr(), swiftFieldlbl, itemsDiv, addBtn);
+		add(eventlbl, hr1, eventRB, hr2, swiftFieldlbl, itemsDiv, addBtn);
 		eventRB.addValueChangeListener(event ->
 		{
 			fieldList.clear();
@@ -54,8 +65,7 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 			if (Objects.isNull(event.getValue()))
 				return;
 
-			List<ProductEventSwift> items = new ArrayList();
-			//new ProductDAO().findProductEventSwiftForEvent(entity,event.getValue());
+			List<ProductEventSwift> items =repository.findByProductIdAndEventId(entity.getId(),event.getValue().getId());
 			if (items.isEmpty())
 				return;
 			items.forEach(item ->
@@ -68,9 +78,9 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 		{
 			addButtonAction();
 		});
-		setSpacing(false);
+		setSpacing(true);
 		setPadding(false);
-		setMargin(false);
+		setMargin(true);
 	}
 
 	public void updateFields(Product product)
@@ -79,8 +89,7 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 		if (Objects.nonNull(entity))
 		{
 			binder.setBean(product);
-			List<ProductTypeEvent> evtList = new ArrayList();
-					//productTypeEventDAO.getProductTypeEventListByProductType(product.getType());
+			List<ProductTypeEvent> evtList = productTypeEventRepo.findByProductTypeId(product.getType().getId());
 			eventRB.setItems(evtList);
 			eventRB.setValue(evtList.get(0));
 		}
@@ -120,6 +129,9 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 			binder.setBean(fieldEntity);
 			addSwiftBtn = new Button("Save");
 			
+			setSpacing(true);
+			setMargin(true);
+			
 			swiftMessageTypeCB.setItems(SwiftMessageType.values());
 			add(removeBtn, swiftMessageTypeCB, forIncomingCB, forOutgoingCB, addSwiftBtn);
 			setVerticalComponentAlignment(Alignment.BASELINE, removeBtn, swiftMessageTypeCB, forIncomingCB, forOutgoingCB, addSwiftBtn);
@@ -131,7 +143,7 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 			{
 				if (binder.validate().isOk())
 				{
-					//FacadeFactory.getFacade().store(binder.getBean());
+					repository.save(binder.getBean());
 					Notification.show("Swift Message Type saved successfully");
 				}
 			});
@@ -159,4 +171,15 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 				fieldList.get(0).setLabels(fieldList.get(0));
 		}
 	}
+
+	public void setRepository(ProductEventSwiftRepository repository) {
+		this.repository = repository;
+	}
+
+	public void setProductTypeEventRepo(ProductTypeEventRepository productTypeEventRepo) {
+		this.productTypeEventRepo = productTypeEventRepo;
+	}
+	
+	
+	
 }

@@ -6,8 +6,6 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
-//import org.vaadin.tabs.PagedTabs;
 
 import com.more.app.base.ui.BaseCrudComponent;
 import com.more.app.base.ui.CrudPageView;
@@ -16,15 +14,19 @@ import com.more.app.entity.Product;
 import com.more.app.entity.ProductModule;
 import com.more.app.entity.ProductType;
 import com.more.app.repository.CurrencyRepository;
+import com.more.app.repository.productsetup.ChargeDefinationRepository;
+import com.more.app.repository.productsetup.ProductEventSwiftRepository;
 import com.more.app.repository.productsetup.ProductModuleRepository;
+import com.more.app.repository.productsetup.ProductReferenceNumberDefinationRepository;
 import com.more.app.repository.productsetup.ProductRepository;
+import com.more.app.repository.productsetup.ProductTypeEventPolicyRepository;
 import com.more.app.repository.productsetup.ProductTypeEventRepository;
 import com.more.app.repository.productsetup.ProductTypeRepository;
+import com.more.app.repository.productsetup.ProductWorkFlowQueueRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
@@ -35,11 +37,9 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.RouteScope;
-import com.vaadin.flow.spring.annotation.UIScope;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 
-@Component
+import jakarta.annotation.PostConstruct;
+
 @Route(value = ProductConfigurationCrudView.pageUrlString, layout = CrudPageView.class)
 public class ProductConfigurationCrudView extends BaseCrudComponent<Product> implements HasUrlParameter<String> {
 	private static final long serialVersionUID = 871239298806282590L;
@@ -48,19 +48,37 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 
 	@Autowired
 	private ProductRepository repository;
-
 	@Autowired
 	private ProductTypeRepository pTyperepository;
-
 	@Autowired
 	private ProductModuleRepository pModulerepository;
-
 	@Autowired
-	public ProductConfigurationCrudView(AllowedCurrencyComponent allowedCcyView,
-			ReferenceNumberDefinationView referenceNoView) {
+	private CurrencyRepository currencyRepository;	
+	@Autowired
+	private ProductReferenceNumberDefinationRepository refNoDefRepository;	
+	@Autowired
+	private ProductWorkFlowQueueRepository wfqRepository;
+	@Autowired
+	private ProductTypeEventRepository eventRepository;
+	@Autowired
+	private ProductTypeEventPolicyRepository policyRepo;
+	@Autowired
+	private ProductTypeEventRepository pteRepository;
+	@Autowired
+	private CurrencyRepository ccyRepo;
+	@Autowired
+	private ChargeDefinationRepository chargeDefRepository;
+	@Autowired
+	private ProductTypeEventRepository productTypeEventRepo;
+	@Autowired
+	private ProductEventSwiftRepository eventSwiftRepository;
+	
+	public ProductConfigurationCrudView() {
 		super();
-		this.allowedCcyView = allowedCcyView;
-		this.referenceNoView = referenceNoView;
+	}
+
+	@PostConstruct
+	private void init() {
 		FormLayout fl = new FormLayout();
 		fl.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
 		fl.add(productTypeCB, codeTF, nameTF, descriptionTA, refNoFieldLength);
@@ -68,47 +86,23 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 		VerticalLayout vlMain = new VerticalLayout(fl, new Hr(), allowedCcyView, checklistView);
 		vlMain.setWidthFull();
 
-		// VerticalLayout vlWorkFlow = new VerticalLayout(workflowView);
-		// vlWorkFlow.setWidth("1200px");
-		// vlWorkFlow.getElement().getStyle().set("overflow", "auto");
-		// vlWorkFlow.getElement().getStyle().set("padding-right",
-		// "var(--lumo-space-m)");
-
-		// VerticalLayout eventChargeVl = new VerticalLayout(eventChargeView);
-		// eventChargeVl.setWidth("1200px");
-		// eventChargeVl.getElement().getStyle().set("overflow", "auto");
-		// eventChargeVl.getElement().getStyle().set("padding-right",
-		// "var(--lumo-space-m)");
-
-		// eventSwiftView.setWidth("1200px");
-		// eventSwiftView.getElement().getStyle().set("overflow", "auto");
-		// eventSwiftView.getElement().getStyle().set("padding-right",
-		// "var(--lumo-space-m)");
-
-		// referenceNoView.setWidth("1200px");
-		// referenceNoView.getElement().getStyle().set("overflow", "auto");
-		// referenceNoView.getElement().getStyle().set("padding-right",
-		// "var(--lumo-space-m)");
-
+		allowedCcyView.setCurrencyRepo(currencyRepository);
+		referenceNoView.setRepository(refNoDefRepository);
+		workflowView.setRepository(wfqRepository);
+		workflowView.setEventRepository(eventRepository);
+		workflowView.setPolicyRepo(policyRepo);
+		eventChargeView.setProductTypeEventRepo(eventRepository);
+		eventChargeView.setChargeDefRepository(chargeDefRepository);
+		eventSwiftView.setProductTypeEventRepo(eventRepository);
+		eventSwiftView.setRepository(eventSwiftRepository);
+				
 		tabSheet.add("Main Details", vlMain);
-		tabSheet.add("Reference Number", referenceNoView);
-		// tabSheet.add("Charges", eventChargeVl);
-		// tabSheet.add("Posting", new H1("Posting"));
-		// tabSheet.add("Swift", eventSwiftView);
-		// tabSheet.add("Documents", new H1("Documents"));
-		// tabSheet.add("Workflow", vlWorkFlow);
+		
 
-		//tabSheet.getTab(referenceNoView).setVisible(true);
-		// tabSheet.get("Charges").setVisible(true);
-		// tabSheet.get("Posting").setVisible(true);
-		// tabSheet.get("Swift").setVisible(true);
-		// tabSheet.get("Documents").setVisible(true);
-		// tabSheet.get("Workflow").setVisible(true);
 
 		vl.add(tabSheet);
 		vl.setHeightFull();
 		vl.setWidth("1200px");
-
 	}
 
 	private TextField codeTF, nameTF;
@@ -118,22 +112,19 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 	private ComboBox<ProductType> productTypeCB;
 	private ComboBox<String> statusCB;
 	private ProductEventCheckListView checklistView;
-
 	private AllowedCurrencyComponent allowedCcyView;
-
+	private ReferenceNumberDefinationView referenceNoView;
 	private WorkflowConfigurationView workflowView;
 	private ProductEventChargeConfigurationView eventChargeView;
 	private ProductEventSwiftConfigurationView eventSwiftView;
-	private ReferenceNumberDefinationView referenceNoView;
+
+	
+
+
 	private String oldPageMode = "";
 
 	private TabSheet tabSheet = new TabSheet();
 
-	@Autowired
-	private ProductTypeEventRepository pteRepository;
-
-	@Autowired
-	private CurrencyRepository ccyRepo;
 
 	@Override
 	public void initializeComponents() {
@@ -175,14 +166,11 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 		statusCB.setRequiredIndicatorVisible(true);
 
 		checklistView = new ProductEventCheckListView(pteRepository);
-
-		// workflowView = new WorkflowConfigurationView();
-
-		// eventChargeView = new ProductEventChargeConfigurationView();
-
-		// eventSwiftView = new ProductEventSwiftConfigurationView();
-
-		// referenceNoView = new ReferenceNumberDefinationView();
+		allowedCcyView = new AllowedCurrencyComponent(currencyRepository);		
+		workflowView = new WorkflowConfigurationView();
+		eventChargeView = new ProductEventChargeConfigurationView();
+		eventSwiftView = new ProductEventSwiftConfigurationView();
+		referenceNoView = new ReferenceNumberDefinationView(refNoDefRepository);
 
 		productTypeCB.addValueChangeListener(event -> {
 			if ("ADD".equals(getPageMode()) || "ADDNEW".equals(getPageMode()))
@@ -299,7 +287,15 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 				if (id == -1L)
 					beforeEvent.rerouteTo(getCloseNavigationClass());
 				else
+				{
 					entity = repository.findById(id).orElse(null);
+					tabSheet.add("Reference Number", referenceNoView);
+					tabSheet.add("WorkFlow Set up", workflowView);
+					tabSheet.add("Event Charge Set up", eventChargeView);
+					tabSheet.add("Swift Set up", eventSwiftView);
+				}
+				
+				
 			}
 		} else
 			getUI().get().navigate(getCloseNavigationClass());
@@ -312,12 +308,11 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 
 	@Override
 	public void updateFieldsOnSave() {
+		referenceNoView.updateFields(getEntity());
+		workflowView.updateFields(getEntity());
+		eventChargeView.updateFields(getEntity());
+		eventSwiftView.updateFields(getEntity());
 
-		// workflowView.updateFields(getEntity());
-		// eventChargeView.updateFields(getEntity());
-		// eventSwiftView.updateFields(getEntity());
-		if (null != entity)
-			referenceNoView.updateFields(getEntity());
 	}
 
 	@Override

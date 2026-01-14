@@ -28,7 +28,7 @@ public class ProductTypeEventPolicy extends AbstractPojo
 	private Long eventId;
 	
 	@UIAction(label = "Event",errorlabel="Event is mandatory")
-	@Formula("(select a.eventCode from Product_Type_Event a where a.id = event_Id)") 
+	@Formula("(select a.event_Code from Product_Type_Event a where a.id = event_Id)") 
 	private String eventCode;
 	
 	@UIAction(label = "Policy Class",errorlabel="Policy Class is mandatory")
@@ -113,5 +113,21 @@ public class ProductTypeEventPolicy extends AbstractPojo
 	public void setCancelQueueType(Boolean cancelQueueType)
 	{
 		this.cancelQueueType = cancelQueueType;
+	}
+
+	public Long getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(Long eventId) {
+		this.eventId = eventId;
+	}
+
+	public String getEventCode() {
+		return eventCode;
+	}
+
+	public void setEventCode(String eventCode) {
+		this.eventCode = eventCode;
 	}	
 }

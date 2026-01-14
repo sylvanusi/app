@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.more.app.entity.AbstractPojo;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -18,6 +19,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterListener;
 import com.vaadin.flow.router.RouterLayout;
+
+import jakarta.annotation.PostConstruct;
 
 public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		implements BeforeEnterListener, RouterLayout
@@ -50,8 +53,11 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 
 		setHeight("100%");
 		setWidthFull();
+		
 
 		getStyle().set("overflow-y", "auto");
+		setSpacing(true);
+		setMargin(true);
 	}
 
 	public BaseView(DialogSelectEntity dialogSelectEntity, Dialog dg)
@@ -60,6 +66,8 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		this.dg = dg;
 		hasDialogue = true;
 		loadComponents();
+		setSpacing(true);
+		setMargin(true);
 	}
 	
 	public BaseView(DialogSelectEntity dialogSelectEntity, Dialog dg, JpaRepository<T, Long> repository)
@@ -77,6 +85,8 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		this.repository = repository;
 		hasDialogue = true;
 		loadComponents();
+		setSpacing(true);
+		setMargin(true);
 	}
 
 	public void addBaseComponentsandStyle()
@@ -175,15 +185,22 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 			}
 		});
 
-		addb.addClickListener(evt -> navigationAction(PAGE_MODE_ADD));
-		editb.addClickListener(event -> navigationAction(PAGE_MODE_EDIT + "," + getSelectedItemId()));
-		viewb.addClickListener(event -> navigationAction(PAGE_MODE_VIEW + "," + getSelectedItemId()));
+		
 
 		if (hl.getComponentCount() == 0)
 			remove(hl);
 		
 		add(innerVl);
 	}
+	
+	@PostConstruct
+	private void init() {
+		addb.addClickListener(evt -> navigationAction(PAGE_MODE_ADD));
+		editb.addClickListener(event -> navigationAction(PAGE_MODE_EDIT + "," + getSelectedItemId()));
+		viewb.addClickListener(event -> navigationAction(PAGE_MODE_VIEW + "," + getSelectedItemId()));
+	}
+	
+	
 
 	public abstract void loadComponents();
 

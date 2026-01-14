@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.more.app.base.ui.BaseView;
 import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
 import com.more.app.entity.ChargeDefination;
+import com.more.app.repository.CountryRepository;
 import com.more.app.repository.productsetup.ChargeDefinationRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
@@ -39,6 +41,12 @@ public class ChargeDefinationView extends BaseView<ChargeDefination>
 	public ChargeDefinationView(DialogSelectEntity dialog, Dialog dg)
 	{
 		super(dialog,dg);
+	}
+	
+	public <T> ChargeDefinationView(DialogSelectEntity dialog, Dialog dg, JpaRepository repository)
+	{
+		super(dialog, dg, repository);
+		this.repository = (ChargeDefinationRepository) repository;
 	}
 
 	@Override

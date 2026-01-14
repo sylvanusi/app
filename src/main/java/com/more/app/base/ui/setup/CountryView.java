@@ -17,7 +17,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
-@Component
+
 @Route(value = "countryView", layout = LeftAlignedLayout.class)
 public class CountryView extends BaseView<Country>
 {

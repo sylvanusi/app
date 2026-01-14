@@ -9,6 +9,7 @@ import com.more.app.entity.Country;
 import com.more.app.repository.CountryRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
@@ -138,5 +139,11 @@ public class CountryCrudView extends BaseCrudComponent<Country> implements HasUr
 	@Override
 	public void saveRecord(Country entity) {
 		repo.save(entity);
+	}
+	
+	@Override
+	protected void onDetach(DetachEvent detachEvent) {
+		// TODO Auto-generated method stub
+		removeAll();
 	}
 }

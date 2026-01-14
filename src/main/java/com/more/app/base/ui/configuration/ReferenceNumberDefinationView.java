@@ -5,19 +5,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.more.app.entity.Product;
 import com.more.app.entity.ProductReferenceNumberDefination;
 import com.more.app.entity.enums.ReferenceNumberItem;
 import com.more.app.repository.productsetup.ProductReferenceNumberDefinationRepository;
-import com.more.app.repository.productsetup.ProductRepository;
 import com.more.app.util.ReferenceNumberItemUtil;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -27,9 +23,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.Route;
 
-@Component
 public class ReferenceNumberDefinationView extends VerticalLayout {
 	private static final long serialVersionUID = 1L;
 	private Div itemsDiv = new Div();
@@ -37,25 +31,16 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 
 	private Binder<Product> binder = new Binder<>(Product.class);
 	private Button addBtn, saveBtn;
-	private H1 lbl = new H1("Reference Number Defination");
+	private H5 lbl = new H5("Reference Number Defination");
 	private Product entity;
 	private TextField sampleReftf = new TextField("Sample Reference");
 	private IntegerField tfRefLength = new IntegerField("Reference Length");
 	private int lastPosition = 0;
 
-	private ProductRepository repository;
+	private ProductReferenceNumberDefinationRepository repository;
 
-	private ProductReferenceNumberDefinationRepository prefnumRepository;
-
-	@Autowired
-	public ReferenceNumberDefinationView(ProductRepository repository,
-			ProductReferenceNumberDefinationRepository prefnumRepository) {
+	public ReferenceNumberDefinationView(ProductReferenceNumberDefinationRepository repository) {
 		this.repository = repository;
-		this.prefnumRepository = prefnumRepository;
-
-		System.out.println("ProductRepository is null " + (repository == null));
-		System.out.println("ProductReferenceNumberDefinationRepository is null " + (prefnumRepository == null));
-
 		lbl.getElement().getStyle().set("font-weight", "bold");
 		addBtn = new Button("Add Reference Item");
 		saveBtn = new Button("Save Reference Items");
@@ -70,9 +55,8 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 		saveBtn.addClickListener(evt -> {
 			saveButtonAction();
 		});
-		setSpacing(false);
-		setPadding(true);
-		setMargin(false);
+		setSpacing(true);
+		setMargin(true);
 	}
 
 	public void updateFields(Product product) {
@@ -81,7 +65,7 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 			itemsDiv.removeAll();
 			fieldList.clear();
 			tfRefLength.setValue(entity.getReferenceLength());
-			List<ProductReferenceNumberDefination> refNoItems = new ArrayList(); // dao.findProductReferenceNumberDefination(product);
+			List<ProductReferenceNumberDefination> refNoItems = repository.findByProductId(product.getId());
 			lastPosition = refNoItems.size();
 			if (refNoItems.isEmpty())
 				addButtonAction();
@@ -94,10 +78,12 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 
 	private void saveButtonAction() {
 		if (!isInValid()) {
-			List<ProductReferenceNumberDefination> lisToSave = fieldList.stream().map(field -> field.binder.getBean())
+			List<ProductReferenceNumberDefination> lisToSave = fieldList.stream().map(field -> {
+				ProductReferenceNumberDefination item  = field.binder.getBean();
+				item.setProductId(item.getProduct().getId());
+				return item;})
 					.collect(Collectors.toList());
-
-			prefnumRepository.saveAll(lisToSave);
+			repository.saveAll(lisToSave);
 			Notification.show("Reference No Items Saved", 5000, Position.TOP_CENTER);
 		}
 	}
@@ -108,14 +94,11 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 			return;
 		}
 		lastPosition = lastPosition + 1;
-		if (null != entity) {
-			ProductReferenceNumberDefination refNoEntity = new ProductReferenceNumberDefination();
-			refNoEntity.setProduct(entity);
-			refNoEntity.setProductId(entity.getId());
-			refNoEntity.setPosition(lastPosition);
-			new ReferenceNumberItemsField(refNoEntity);
-			fieldList.get(0).setLabels(fieldList.get(0));
-		}
+		ProductReferenceNumberDefination refNoEntity = new ProductReferenceNumberDefination();
+		refNoEntity.setProduct(entity);
+		refNoEntity.setPosition(lastPosition);
+		new ReferenceNumberItemsField(refNoEntity);
+		fieldList.get(0).setLabels(fieldList.get(0));
 	}
 
 	private void addButtonAction(ProductReferenceNumberDefination refNoItem) {
@@ -144,6 +127,9 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 			this.field = this;
 			fieldList.add(field);
 			binder.setBean(item);
+			
+			setSpacing(true);
+			setMargin(true);
 
 			refNoItemsCB.setItems(ReferenceNumberItem.values());
 			refNoItemsCB.setItemLabelGenerator(ReferenceNumberItem::getDescription);
@@ -219,7 +205,7 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 			lastPosition = lastPosition - 1;
 			itemsDiv.remove(field);
 			fieldList.remove(field);
-			// FacadeFactory.getFacade().delete(field.item);
+			repository.delete(field.item);
 			if (!fieldList.isEmpty())
 				fieldList.get(0).setLabels(fieldList.get(0));
 
@@ -236,5 +222,13 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 
 	private boolean isInValid() {
 		return fieldList.stream().anyMatch(f -> Boolean.FALSE.equals(f.binder.validate().isOk()));
+	}
+
+	public ProductReferenceNumberDefinationRepository getRepository() {
+		return repository;
+	}
+
+	public void setRepository(ProductReferenceNumberDefinationRepository repository) {
+		this.repository = repository;
 	}
 }

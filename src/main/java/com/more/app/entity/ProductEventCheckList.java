@@ -143,7 +143,4 @@ public class ProductEventCheckList extends AbstractPojo
 	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
-	
-	
-	
 }

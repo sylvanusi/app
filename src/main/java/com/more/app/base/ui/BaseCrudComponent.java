@@ -19,6 +19,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayoutVariant;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.server.VaadinSession;
 
 import jakarta.persistence.OptimisticLockException;
 
@@ -40,7 +41,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 		this.entity = getEntity();
 		this.pageMode = getPageMode();
 		this.binder = getBinder();
-
+	
 		initializeComponents();
 
 		Notification n = new Notification();
@@ -110,7 +111,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		closeButton = new Button("Close", new Icon(VaadinIcon.CLOSE_CIRCLE_O));
 		closeButton.addClickListener(event -> {
-			//removeAll();
+			removeAll();
 			getUI().get().navigate((Class<? extends Component>) getCloseNavigationClass());
 		});
 
@@ -180,8 +181,8 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 		getStyle().set("overflow-y", "auto");
 
 		setPadding(false);
-		setMargin(false);
-		setSpacing(false);
+		setMargin(true);
+		setSpacing(true);
 	}
 
 	public abstract Class<?> getCloseNavigationClass();
