@@ -30,6 +30,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
@@ -79,6 +80,8 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 
 	@PostConstruct
 	private void init() {
+		tabSheet.addThemeVariants(TabSheetVariant.AURA_TABS_FILLED, TabSheetVariant.AURA_TABS_ACCENT);
+
 		FormLayout fl = new FormLayout();
 		fl.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
 		fl.add(productTypeCB, codeTF, nameTF, descriptionTA, refNoFieldLength);

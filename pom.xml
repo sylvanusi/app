@@ -75,11 +75,7 @@
 			<version>5.12.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.vaadin.tabs</groupId>
-			<artifactId>paged-tabs</artifactId>
-			<version>4.0.0</version>
-		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -34,6 +34,8 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 	protected H4 title = new H4();
 	private Div body = new Div();
 	public Button confirmButton, addewButton, closeButton;
+	public Hr hr1 = new Hr();
+	public HorizontalLayout hl = new HorizontalLayout();
 
 	@SuppressWarnings("unchecked")
 	public BaseCrudComponent() {
@@ -90,7 +92,6 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 						ui.vl.addComponentAtIndex(0, errorVl);
 					}
 				}
-
 			} catch (OptimisticLockException e) {
 				// FacadeFactory.getFacade().refresh(entity);
 			} catch (Exception e) {
@@ -115,7 +116,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 			getUI().get().navigate((Class<? extends Component>) getCloseNavigationClass());
 		});
 
-		HorizontalLayout hl = new HorizontalLayout();
+		
 		hl.setPadding(true);
 		// hl.setSizeFull();
 		hl.setSpacing(true);
@@ -155,7 +156,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		add(body);
 
-		Hr hr1 = new Hr();
+		
 		hr1.setWidthFull();
 		hr1.getElement().getStyle().set("border-top", "1.0px solid #000000");
 		add(hr1);

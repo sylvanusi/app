@@ -19,6 +19,7 @@ import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -143,8 +144,13 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 			{
 				if (binder.validate().isOk())
 				{
+					ProductEventSwift entity = binder.getBean();
+					entity.setProductId(entity.getProduct().getId());
+					entity.setEventId(entity.getEvent().getId());
 					repository.save(binder.getBean());
-					Notification.show("Swift Message Type saved successfully");
+					Notification.show("Swift Message Type Saved successfully", 3000, Position.TOP_CENTER);
+
+					//NotificationUtil.createSavedNotification("Event Swift Item Saved");
 				}
 			});
 			
@@ -163,8 +169,8 @@ public class ProductEventSwiftConfigurationView extends VerticalLayout
 		
 		private void removeButtonAction()
 		{
-			//FacadeFactory.getFacade().delete(field.fieldEntity);
-			Notification.show("Swift Message Type removed successfully");
+			repository.delete(field.fieldEntity);
+			Notification.show("Swift Message Type removed successfully", 3000, Position.TOP_CENTER);
 			itemsDiv.remove(field);
 			fieldList.remove(field);
 			if (!fieldList.isEmpty())

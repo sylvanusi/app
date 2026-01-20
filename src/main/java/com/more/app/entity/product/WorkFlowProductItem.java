@@ -3,8 +3,10 @@ package com.more.app.entity.product;
 public interface WorkFlowProductItem
 {
 	public void setCurrentQueue(ProductWorkFlowQueue currentQueue);
+	public void setCurrentQueueId(Long currentQueueID);
 
 	public void setNextQueue(ProductWorkFlowQueue nextQueue);
+	public void setNextQueueId(Long nextQueueId);
 
 	public void setWorkflowStatus(String workflowStatus);
 
@@ -14,7 +16,11 @@ public interface WorkFlowProductItem
 
 	public ProductWorkFlowQueue getNextQueue();
 
+	public Long getNextQueueId();
+
 	public ProductWorkFlowQueue getCurrentQueue();
+	
+	public Long getCurrentQueueId();
 
 	public String getWorkflowStatus();
 
