@@ -51,16 +51,17 @@ public class RegisterView extends BaseView<Register>
 	@Override
 	public void loadComponents()
 	{
+		grid.addColumn(Register :: getRegistrationDate).setHeader("Registration Date");
 		grid.addColumn(y -> (y.getTransactionReference() == null) ? y.getInternalReference() : y.getTransactionReference()).setHeader("Reference");
 		grid.addColumn(Register :: getProductType).setHeader("Product Type");
 		grid.addColumn(Register :: getProductName).setHeader("Product");
 		grid.addColumn(k -> (k.getTransactionCcy() == null ? "" : k.getTransactionCcy()) + " "
 				+ (k.getTransactionAmount() == null ? "" : numberFormat.format(k.getTransactionAmount())))
 				.setHeader("Amount");
-		grid.addColumn(Register :: getProductName).setHeader("Applicant");
+		grid.addColumn(Register :: getApplicantName).setHeader("Applicant");
 		grid.addColumn(Register :: getCurrentQueueName).setHeader("Current Queue");
 		grid.addColumn(Register::getWorkflowStatus).setHeader("WorkFlow Status");
-		grid.addColumn(Register :: getNextQueueName).setHeader("Next Queue");
+		//grid.addColumn(Register :: getNextQueueName).setHeader("Next Queue");
 		grid.addColumn(k -> k.getTransactionStatus().getStatus()).setHeader("Transaction Status");
 
 		addBaseComponentsandStyle();
@@ -74,6 +75,7 @@ public class RegisterView extends BaseView<Register>
 	@Override
 	protected void onAttach(AttachEvent attachEvent)
 	{
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
 		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
 	}
 

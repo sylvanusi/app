@@ -1,6 +1,7 @@
 package com.more.app.entity.product;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,9 +15,11 @@ import com.more.app.entity.enums.Status;
 import com.more.app.util.annotations.Auditable;
 import com.more.app.util.annotations.UIAction;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -28,13 +31,13 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	private String module;
 
 	@UIAction(label = "Product Type", errorlabel = "Product Type is required")
-	@Formula("(select b.product_Type from product a , Product_Type b where a.type_id = b.id and a.id = product_Id)") 
+	@Formula("(select b.product_Type from product a , Product_Type b where a.type_id = b.id and a.id = product_Id)")
 	private String productType;
 
 	@UIAction(label = "Product Name", errorlabel = "Product Name is required")
-	@Formula("(select a.product_Name from product a where a.id = product_Id)") 
+	@Formula("(select a.product_Name from product a where a.id = product_Id)")
 	private String productName;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 7)
 	@UIAction(label = "Product", errorlabel = "Product is required")
 	@Transient
@@ -74,7 +77,7 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Applicant", errorlabel = "Applicant is required")
 	@JoinColumn(referencedColumnName = "id")
 	private Long applicantId;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 11)
 	@UIAction(label = "Applicant Name", errorlabel = "Applicant is required")
 	@Column(length = 35)
@@ -84,7 +87,7 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Beneficiary", errorlabel = "Beneficiary is required")
 	@Transient
 	private Customer beneficiaryCustomer;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 12)
 	@UIAction(label = "Beneficiary", errorlabel = "Beneficiary is required")
 	@JoinColumn(referencedColumnName = "id")
@@ -99,12 +102,12 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Transacting Branch", errorlabel = "Transacting Branch is required")
 	@Transient
 	private Branch transactionBranch;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 13)
 	@UIAction(label = "Transacting Branch", errorlabel = "Transacting Branch is required")
-	@Formula("(select a.name from Branch a where a.id = transaction_Branch_Id)") 
+	@Formula("(select a.name from Branch a where a.id = transaction_Branch_Id)")
 	private String transactionBranchName;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 13)
 	@UIAction(label = "Transacting Branch", errorlabel = "Transacting Branch is required")
 	@JoinColumn(referencedColumnName = "id")
@@ -129,17 +132,17 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Current Queue", errorlabel = "Current Queue is required")
 	@Transient
 	private ProductWorkFlowQueue currentQueue;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 17)
 	@UIAction(label = "Current Queue", errorlabel = "Current Queue is required")
 	@JoinColumn(referencedColumnName = "id")
 	private Long currentQueueId;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 17)
 	@UIAction(label = "Current Queue", errorlabel = "Current Queue is required")
-	@Formula("(select a.queue_Name from Product_Work_Flow_Queue a where a.id = current_Queue_Id)") 
+	@Formula("(select a.queue_Name from Product_Work_Flow_Queue a where a.id = current_Queue_Id)")
 	private String currentQueueName;
-	
+
 	@Formula("(select a.event_description from Product_type_event a, Product_Work_Flow_Queue b where b.event_id = a.Id and b.id = current_Queue_Id)")
 	private String eventDescription;
 
@@ -152,58 +155,57 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Next Queue", errorlabel = "Next Queue is required")
 	@JoinColumn(referencedColumnName = "id")
 	private Long nextQueueId;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 18)
 	@UIAction(label = "Next Queue", errorlabel = "Next Queue is required")
-	@Formula("(select a.queue_Name from Product_Work_Flow_Queue a where a.id = next_Queue_Id)") 
+	@Formula("(select a.queue_Name from Product_Work_Flow_Queue a where a.id = next_Queue_Id)")
 	private String nextQueueName;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 18)
 	@UIAction(label = "Event", errorlabel = "Event is required")
-	@Formula("(select b.event_description from Product_Work_Flow_Queue a, product_type_event b where b.id = a.event_Id and a.id = current_Queue_Id)") 
+	@Formula("(select b.event_description from Product_Work_Flow_Queue a, product_type_event b where b.id = a.event_Id and a.id = current_Queue_Id)")
 	private String eventName;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 18)
 	@UIAction(label = "Event", errorlabel = "Event is required")
-	@Formula("(select b.id from Product_Work_Flow_Queue a, product_type_event b where b.id = a.event_Id and a.id = current_Queue_Id)") 
+	@Formula("(select b.id from Product_Work_Flow_Queue a, product_type_event b where b.id = a.event_Id and a.id = current_Queue_Id)")
 	private Long currentQueueEventId;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 18)
 	@UIAction(label = "Event", errorlabel = "Event is required")
-	@Formula("(select a.flow_Sequence from Product_Work_Flow_Queue a where a.id = current_Queue_Id)") 
+	@Formula("(select a.flow_Sequence from Product_Work_Flow_Queue a where a.id = current_Queue_Id)")
 	private Integer currentQueueFlowSequence;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 18)
 	@UIAction(label = "Event", errorlabel = "Event is required")
-	@Formula("(select a.final_Queue from Product_Work_Flow_Queue a where a.id = current_Queue_Id)") 
+	@Formula("(select a.final_Queue from Product_Work_Flow_Queue a where a.id = current_Queue_Id)")
 	private boolean finalQueue;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 18)
 	@UIAction(label = "Event", errorlabel = "Event is required")
-	@Formula("(select b.id from Product_Work_Flow_Queue a, product_type_event b where b.id = a.event_Id and a.id = next_Queue_Id)") 
+	@Formula("(select b.id from Product_Work_Flow_Queue a, product_type_event b where b.id = a.event_Id and a.id = next_Queue_Id)")
 	private Long nextQueueEventId;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 18)
 	@UIAction(label = "Event", errorlabel = "Event is required")
-	@Formula("(select a.flow_Sequence from Product_Work_Flow_Queue a where a.id = next_Queue_Id)") 
+	@Formula("(select a.flow_Sequence from Product_Work_Flow_Queue a where a.id = next_Queue_Id)")
 	private Integer nextQueueFlowSequence;
 
 	@Auditable(enableAudit = true, fieldNo = 19)
 	@UIAction(label = "Transaction Status", errorlabel = "Transaction Status is required")
 	@Column(length = 1)
 	private Status transactionStatus;
-	
+
 	@Auditable(enableAudit = true, fieldNo = 19)
 	@UIAction(label = "Event Status", errorlabel = "Event Status is required")
 	@Column(length = 1)
 	private Status eventStatus;
 
 	@Transient
-	// @Auditable(enableAudit=true, fieldNo=20)
-	// @UIAction(label = "Reason for cancelling",errorlabel="Reason for cancelling
-	// is required")
-	// @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-	// @JoinColumn(referencedColumnName = "id")
+	@Auditable(enableAudit=true, fieldNo=20)
+	@UIAction(label = "Reason for cancelling",errorlabel="Reason for cancelling is required")
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+	 @JoinColumn(referencedColumnName = "id")
 	private Set<CancellationReason> cancelReasons = new HashSet<>();
 
 	@Transient
@@ -213,13 +215,17 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	// @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
 	// @JoinColumn(referencedColumnName = "id")
 	private Set<CancellationReason> declineComments = new HashSet<>();
+	
+	@UIAction(label = "Registration Date", errorlabel = "Registration Date is mandatory")
+	@Auditable(enableAudit = true, fieldNo = 22)
+	private LocalDate registrationDate;
 
 	public String getModule() {
 		return module;
 	}
 
 	public String getProductType() {
-		
+
 		return productType;
 	}
 
@@ -465,8 +471,6 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	public void setNextQueueName(String nextQueueName) {
 		this.nextQueueName = nextQueueName;
 	}
-	
-	
 
 	public String getEventName() {
 		return eventName;
@@ -491,8 +495,7 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	public void setNextQueueEventId(Long nextQueueEventId) {
 		this.nextQueueEventId = nextQueueEventId;
 	}
-	
-	
+
 	public Integer getNextQueueFlowSequence() {
 		return nextQueueFlowSequence;
 	}
@@ -516,8 +519,6 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	public void setCurrentQueueFlowSequence(Integer currentQueueFlowSequence) {
 		this.currentQueueFlowSequence = currentQueueFlowSequence;
 	}
-	
-	
 
 	public boolean isFinalQueue() {
 		return finalQueue;
@@ -527,27 +528,13 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 		this.finalQueue = finalQueue;
 	}
 
-	@Override
-	public String toString() {
-		return "Register [module=" + module + ", productType=" + productType + ", productName=" + productName
-				+ ", product=" + product + ", productId=" + productId + ", transactionReference=" + transactionReference
-				+ ", internalReference=" + internalReference + ", transactionCcy=" + transactionCcy
-				+ ", transactionAmount=" + transactionAmount + ", applicant=" + applicant + ", applicantId="
-				+ applicantId + ", applicantName=" + applicantName + ", beneficiaryCustomer=" + beneficiaryCustomer
-				+ ", beneficiaryCustomerId=" + beneficiaryCustomerId + ", beneficiaryCustomerName="
-				+ beneficiaryCustomerName + ", transactionBranch=" + transactionBranch + ", transactionBranchName="
-				+ transactionBranchName + ", transactionBranchId=" + transactionBranchId + ", workflowReference="
-				+ workflowReference + ", workflowReferenceNo=" + workflowReferenceNo + ", workflowStatus="
-				+ workflowStatus + ", currentQueue=" + currentQueue + ", currentQueueId=" + currentQueueId
-				+ ", currentQueueName=" + currentQueueName + ", eventDescription=" + eventDescription + ", nextQueue="
-				+ nextQueue + ", nextQueueId=" + nextQueueId + ", nextQueueName=" + nextQueueName + ", eventName="
-				+ eventName + ", currentQueueEventId=" + currentQueueEventId + ", currentQueueFlowSequence="
-				+ currentQueueFlowSequence + ", nextQueueEventId=" + nextQueueEventId + ", nextQueueFlowSequence="
-				+ nextQueueFlowSequence + ", transactionStatus=" + transactionStatus + ", eventStatus=" + eventStatus
-				+ ", cancelReasons=" + cancelReasons + ", declineComments=" + declineComments + "]";
+	
+	public LocalDate getRegistrationDate() {
+		return registrationDate;
 	}
 
-	
-	
-	
+	public void setRegistrationDate(LocalDate registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+
 }

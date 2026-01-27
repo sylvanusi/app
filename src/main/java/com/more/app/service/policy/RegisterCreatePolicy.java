@@ -20,7 +20,7 @@ public class RegisterCreatePolicy implements Policy
 		{
 			Register register = (Register) entity;
 			
-			System.out.println(register.toString());
+			//System.out.println(register.toString());
 			
 			//Create History for this Queue before changing the queue state.
 			// Write to master table also

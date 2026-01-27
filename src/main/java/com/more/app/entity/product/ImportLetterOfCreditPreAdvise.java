@@ -18,6 +18,8 @@ import jakarta.persistence.OneToOne;
 public class ImportLetterOfCreditPreAdvise extends AbstractPojo
 {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Column(length = 11)
 	@UIAction(label = "Sender BIC")
 	private String senderBic;

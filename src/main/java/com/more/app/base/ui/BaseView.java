@@ -4,9 +4,9 @@ package com.more.app.base.ui;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.more.app.entity.AbstractPojo;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -16,6 +16,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterListener;
 import com.vaadin.flow.router.RouterLayout;
@@ -198,6 +200,7 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		addb.addClickListener(evt -> navigationAction(PAGE_MODE_ADD));
 		editb.addClickListener(event -> navigationAction(PAGE_MODE_EDIT + "," + getSelectedItemId()));
 		viewb.addClickListener(event -> navigationAction(PAGE_MODE_VIEW + "," + getSelectedItemId()));
+		
 	}
 	
 	
@@ -229,11 +232,7 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 	@Override
 	public void beforeEnter(BeforeEnterEvent event)
 	{
-		//if (null == CurrentUser.get())
-		//{
-		//	SessionHandler.setUser(null);
-		//	event.rerouteTo(LoginScreen.class);
-		//}
+		reloadView();
 	}
 
 	private Long getSelectedItemId()

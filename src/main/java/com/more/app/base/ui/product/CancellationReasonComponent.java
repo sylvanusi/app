@@ -26,8 +26,8 @@ public class CancellationReasonComponent extends VerticalLayout
 	public CancellationReasonComponent(String title, boolean forCancellation)
 	{
 		this.forCancellation = forCancellation;
-		setMargin(false);
-		setSpacing(false);
+		setMargin(true);
+		setSpacing(true);
 		setPadding(false);
 		setWidthFull();
 		titlelabel.setText(title);
@@ -64,6 +64,9 @@ public class CancellationReasonComponent extends VerticalLayout
 			setVerticalComponentAlignment(Alignment.CENTER, removebtn, reasonTA);
 			tierItemsDiv.add(field);
 			removebtn.addClickListener(event -> removeButtonAction());
+			
+			setMargin(true);
+			setSpacing(true);
 		}
 		
 		

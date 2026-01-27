@@ -6,6 +6,8 @@ import com.more.app.base.ui.configuration.ProductConfigurationView;
 import com.more.app.base.ui.configuration.ProductModuleView;
 import com.more.app.base.ui.configuration.ProductTypeEventView;
 import com.more.app.base.ui.configuration.ProductTypeView;
+import com.more.app.base.ui.product.LcIssueView;
+import com.more.app.base.ui.product.LcPreAdviceView;
 import com.more.app.base.ui.product.LcView;
 import com.more.app.base.ui.product.MessagesView;
 import com.more.app.base.ui.product.OcpView;
@@ -32,13 +34,20 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 
 @Route(value = "nav", layout = BaseLayout.class)
 public class NavigationPlatform extends VerticalLayout {
 
+	private static final long serialVersionUID = -6366180042506456913L;
+
 	public NavigationPlatform() {
 
 		Button logoutBtn = new Button("logout");
+		logoutBtn.addClickListener(e -> {
+			getUI().get().navigate("");
+
+		});
 
 		H4 hMenu = new H4();
 		hMenu.setText("Application Menu");
@@ -81,6 +90,8 @@ public class NavigationPlatform extends VerticalLayout {
 		productModuleSection.addItem(new SideNavItem("Product Register", RegisterView.class));
 		productModuleSection.addItem(new SideNavItem("Outward Payment", OcpView.class));
 		productModuleSection.addItem(new SideNavItem("Letter of Credit", LcView.class));
+		productModuleSection.addItem(new SideNavItem("Letter PreAdvise", LcPreAdviceView.class));
+		productModuleSection.addItem(new SideNavItem("Letter Issue", LcIssueView.class));
 		productModuleSection.setExpanded(true);
 
 		SideNavItem reportSection = new SideNavItem("Report");
