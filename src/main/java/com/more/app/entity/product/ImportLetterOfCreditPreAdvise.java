@@ -3,6 +3,8 @@ package com.more.app.entity.product;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.hibernate.annotations.Formula;
+
 import com.more.app.entity.AbstractPojo;
 import com.more.app.util.annotations.UIAction;
 
@@ -13,12 +15,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 @Entity
-public class ImportLetterOfCreditPreAdvise extends AbstractPojo
-{
-	
+public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
+
 	private static final long serialVersionUID = 1L;
+
+	private Long lcMasterId;
 
 	@Column(length = 11)
 	@UIAction(label = "Sender BIC")
@@ -41,38 +45,53 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo
 	// swift field 31D component
 	@UIAction(label = "Expiry Date")
 	private LocalDate dateOfExpiry;
-	
+
 	@Column(length = 29)
 	@UIAction(label = "Place of Expiry")
 	private String placeOfExpiry;
 
 	// swift field 50 component
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(targetEntity = Party.class)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Applicant")
+	private Long applicantPartyId;
+
+	// swift field 50 component
+	@UIAction(label = "Applicant")
+	@Formula("(select a.name from Party a where a.id = applicant_Party_Id)")
+	private String applicantName;
+
+	@Transient
 	private Party applicant;
 
 	// swift field 59 components
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(targetEntity = Party.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Beneficiary")
+	private Long beneficiaryPartyId;
+
+	@UIAction(label = "Beneficiary")
+	@Formula("(select a.name from Party a where a.id = beneficiary_Party_Id)")
+	private String beneficiaryName;
+
+	@Transient
 	private Party beneficiary;
 
 	// swift field 32B components
 	@Column(length = 3)
 	@UIAction(label = "Currency")
 	private String currencyCode;
-	
-	@Column(precision = 15,scale=2)
+
+	@Column(precision = 15, scale = 2)
 	@UIAction(label = "LC Amount")
 	private BigDecimal amountOfDocumentaryCredit;
 
 	// swift field 39A components
-	@Column(precision = 2,scale=0)
+	@Column(precision = 2, scale = 0)
 	@UIAction(label = "Tolerance (+)")
 	private int tolerance1;
-	
-	@Column(precision = 2,scale=0)
+
+	@Column(precision = 2, scale = 0)
 	@UIAction(label = "Tolerance (-)")
 	private int tolerance2;
 
@@ -86,7 +105,6 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Available With ... By ...")
 	private Party availableWithBy;
-
 
 	// swift field 44A component
 	@Column(length = 65)
@@ -142,388 +160,368 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo
 	@UIAction(label = "Sender To Receiver Info")
 	private String senderToReceiverInfo;
 
-
 	/**
 	 * @return the senderBic
 	 */
-	public String getSenderBic()
-	{
+	public String getSenderBic() {
 		return senderBic;
 	}
 
 	/**
 	 * @return the receiverBic
 	 */
-	public String getReceiverBic()
-	{
+	public String getReceiverBic() {
 		return receiverBic;
 	}
 
 	/**
 	 * @return the formOfDocumentaryCr
 	 */
-	public String getFormOfDocumentaryCr()
-	{
+	public String getFormOfDocumentaryCr() {
 		return formOfDocumentaryCr;
 	}
 
 	/**
 	 * @return the documentaryCrNo
 	 */
-	public String getDocumentaryCrNo()
-	{
+	public String getDocumentaryCrNo() {
 		return documentaryCrNo;
 	}
 
 	/**
 	 * @return the dateOfExpiry
 	 */
-	public LocalDate getDateOfExpiry()
-	{
+	public LocalDate getDateOfExpiry() {
 		return dateOfExpiry;
 	}
 
 	/**
 	 * @return the placeOfExpiry
 	 */
-	public String getPlaceOfExpiry()
-	{
+	public String getPlaceOfExpiry() {
 		return placeOfExpiry;
-	}
-
-	/**
-	 * @return the applicant
-	 */
-	public Party getApplicant()
-	{
-		return applicant;
-	}
-
-	/**
-	 * @return the beneficiary
-	 */
-	public Party getBeneficiary()
-	{
-		return beneficiary;
 	}
 
 	/**
 	 * @return the currencyCode
 	 */
-	public String getCurrencyCode()
-	{
+	public String getCurrencyCode() {
 		return currencyCode;
 	}
 
 	/**
 	 * @return the amountOfDocumentaryCredit
 	 */
-	public BigDecimal getAmountOfDocumentaryCredit()
-	{
+	public BigDecimal getAmountOfDocumentaryCredit() {
 		return amountOfDocumentaryCredit;
 	}
 
 	/**
 	 * @return the tolerance1
 	 */
-	public int getTolerance1()
-	{
+	public int getTolerance1() {
 		return tolerance1;
 	}
 
 	/**
 	 * @return the tolerance2
 	 */
-	public int getTolerance2()
-	{
+	public int getTolerance2() {
 		return tolerance2;
 	}
 
 	/**
 	 * @return the additionalAmountsCovered
 	 */
-	public String getAdditionalAmountsCovered()
-	{
+	public String getAdditionalAmountsCovered() {
 		return additionalAmountsCovered;
 	}
 
 	/**
 	 * @return the availableWithBy
 	 */
-	public Party getAvailableWithBy()
-	{
+	public Party getAvailableWithBy() {
 		return availableWithBy;
 	}
 
 	/**
 	 * @return the dispatchFrom
 	 */
-	public String getDispatchFrom()
-	{
+	public String getDispatchFrom() {
 		return dispatchFrom;
 	}
 
 	/**
 	 * @return the portOfLoading
 	 */
-	public String getPortOfLoading()
-	{
+	public String getPortOfLoading() {
 		return portOfLoading;
 	}
 
 	/**
 	 * @return the portOfDischarge
 	 */
-	public String getPortOfDischarge()
-	{
+	public String getPortOfDischarge() {
 		return portOfDischarge;
 	}
 
 	/**
 	 * @return the placeOfFinalDestination
 	 */
-	public String getPlaceOfFinalDestination()
-	{
+	public String getPlaceOfFinalDestination() {
 		return placeOfFinalDestination;
 	}
 
 	/**
 	 * @return the latestDateOfShipment
 	 */
-	public LocalDate getLatestDateOfShipment()
-	{
+	public LocalDate getLatestDateOfShipment() {
 		return latestDateOfShipment;
 	}
 
 	/**
 	 * @return the shipmentPeriod
 	 */
-	public String getShipmentPeriod()
-	{
+	public String getShipmentPeriod() {
 		return shipmentPeriod;
 	}
 
 	/**
 	 * @return the goodDesription
 	 */
-	public String getGoodDesription()
-	{
+	public String getGoodDesription() {
 		return goodDesription;
 	}
 
 	/**
 	 * @return the advThrBankParty
 	 */
-	public Party getAdvThrBankParty()
-	{
+	public Party getAdvThrBankParty() {
 		return advThrBankParty;
 	}
 
 	/**
 	 * @return the narrative
 	 */
-	public String getNarrative()
-	{
+	public String getNarrative() {
 		return narrative;
 	}
 
 	/**
 	 * @return the senderToReceiverInfo
 	 */
-	public String getSenderToReceiverInfo()
-	{
+	public String getSenderToReceiverInfo() {
 		return senderToReceiverInfo;
 	}
 
 	/**
 	 * @param senderBic the senderBic to set
 	 */
-	public void setSenderBic(String senderBic)
-	{
+	public void setSenderBic(String senderBic) {
 		this.senderBic = senderBic;
 	}
 
 	/**
 	 * @param receiverBic the receiverBic to set
 	 */
-	public void setReceiverBic(String receiverBic)
-	{
+	public void setReceiverBic(String receiverBic) {
 		this.receiverBic = receiverBic;
 	}
 
 	/**
 	 * @param formOfDocumentaryCr the formOfDocumentaryCr to set
 	 */
-	public void setFormOfDocumentaryCr(String formOfDocumentaryCr)
-	{
+	public void setFormOfDocumentaryCr(String formOfDocumentaryCr) {
 		this.formOfDocumentaryCr = formOfDocumentaryCr;
 	}
 
 	/**
 	 * @param documentaryCrNo the documentaryCrNo to set
 	 */
-	public void setDocumentaryCrNo(String documentaryCrNo)
-	{
+	public void setDocumentaryCrNo(String documentaryCrNo) {
 		this.documentaryCrNo = documentaryCrNo;
 	}
 
 	/**
 	 * @param dateOfExpiry the dateOfExpiry to set
 	 */
-	public void setDateOfExpiry(LocalDate dateOfExpiry)
-	{
+	public void setDateOfExpiry(LocalDate dateOfExpiry) {
 		this.dateOfExpiry = dateOfExpiry;
 	}
 
 	/**
 	 * @param placeOfExpiry the placeOfExpiry to set
 	 */
-	public void setPlaceOfExpiry(String placeOfExpiry)
-	{
+	public void setPlaceOfExpiry(String placeOfExpiry) {
 		this.placeOfExpiry = placeOfExpiry;
-	}
-
-	/**
-	 * @param applicant the applicant to set
-	 */
-	public void setApplicant(Party applicant)
-	{
-		this.applicant = applicant;
-	}
-
-	/**
-	 * @param beneficiary the beneficiary to set
-	 */
-	public void setBeneficiary(Party beneficiary)
-	{
-		this.beneficiary = beneficiary;
 	}
 
 	/**
 	 * @param currencyCode the currencyCode to set
 	 */
-	public void setCurrencyCode(String currencyCode)
-	{
+	public void setCurrencyCode(String currencyCode) {
 		this.currencyCode = currencyCode;
 	}
 
 	/**
 	 * @param amountOfDocumentaryCredit the amountOfDocumentaryCredit to set
 	 */
-	public void setAmountOfDocumentaryCredit(BigDecimal amountOfDocumentaryCredit)
-	{
+	public void setAmountOfDocumentaryCredit(BigDecimal amountOfDocumentaryCredit) {
 		this.amountOfDocumentaryCredit = amountOfDocumentaryCredit;
 	}
 
 	/**
 	 * @param tolerance1 the tolerance1 to set
 	 */
-	public void setTolerance1(int tolerance1)
-	{
+	public void setTolerance1(int tolerance1) {
 		this.tolerance1 = tolerance1;
 	}
 
 	/**
 	 * @param tolerance2 the tolerance2 to set
 	 */
-	public void setTolerance2(int tolerance2)
-	{
+	public void setTolerance2(int tolerance2) {
 		this.tolerance2 = tolerance2;
 	}
 
 	/**
 	 * @param additionalAmountsCovered the additionalAmountsCovered to set
 	 */
-	public void setAdditionalAmountsCovered(String additionalAmountsCovered)
-	{
+	public void setAdditionalAmountsCovered(String additionalAmountsCovered) {
 		this.additionalAmountsCovered = additionalAmountsCovered;
 	}
 
 	/**
 	 * @param availableWithBy the availableWithBy to set
 	 */
-	public void setAvailableWithBy(Party availableWithBy)
-	{
+	public void setAvailableWithBy(Party availableWithBy) {
 		this.availableWithBy = availableWithBy;
 	}
 
 	/**
 	 * @param dispatchFrom the dispatchFrom to set
 	 */
-	public void setDispatchFrom(String dispatchFrom)
-	{
+	public void setDispatchFrom(String dispatchFrom) {
 		this.dispatchFrom = dispatchFrom;
 	}
 
 	/**
 	 * @param portOfLoading the portOfLoading to set
 	 */
-	public void setPortOfLoading(String portOfLoading)
-	{
+	public void setPortOfLoading(String portOfLoading) {
 		this.portOfLoading = portOfLoading;
 	}
 
 	/**
 	 * @param portOfDischarge the portOfDischarge to set
 	 */
-	public void setPortOfDischarge(String portOfDischarge)
-	{
+	public void setPortOfDischarge(String portOfDischarge) {
 		this.portOfDischarge = portOfDischarge;
 	}
 
 	/**
 	 * @param placeOfFinalDestination the placeOfFinalDestination to set
 	 */
-	public void setPlaceOfFinalDestination(String placeOfFinalDestination)
-	{
+	public void setPlaceOfFinalDestination(String placeOfFinalDestination) {
 		this.placeOfFinalDestination = placeOfFinalDestination;
 	}
 
 	/**
 	 * @param latestDateOfShipment the latestDateOfShipment to set
 	 */
-	public void setLatestDateOfShipment(LocalDate latestDateOfShipment)
-	{
+	public void setLatestDateOfShipment(LocalDate latestDateOfShipment) {
 		this.latestDateOfShipment = latestDateOfShipment;
 	}
 
 	/**
 	 * @param shipmentPeriod the shipmentPeriod to set
 	 */
-	public void setShipmentPeriod(String shipmentPeriod)
-	{
+	public void setShipmentPeriod(String shipmentPeriod) {
 		this.shipmentPeriod = shipmentPeriod;
 	}
 
 	/**
 	 * @param goodDesription the goodDesription to set
 	 */
-	public void setGoodDesription(String goodDesription)
-	{
+	public void setGoodDesription(String goodDesription) {
 		this.goodDesription = goodDesription;
 	}
 
 	/**
 	 * @param advThrBankParty the advThrBankParty to set
 	 */
-	public void setAdvThrBankParty(Party advThrBankParty)
-	{
+	public void setAdvThrBankParty(Party advThrBankParty) {
 		this.advThrBankParty = advThrBankParty;
 	}
 
 	/**
 	 * @param narrative the narrative to set
 	 */
-	public void setNarrative(String narrative)
-	{
+	public void setNarrative(String narrative) {
 		this.narrative = narrative;
 	}
 
 	/**
 	 * @param senderToReceiverInfo the senderToReceiverInfo to set
 	 */
-	public void setSenderToReceiverInfo(String senderToReceiverInfo)
-	{
+	public void setSenderToReceiverInfo(String senderToReceiverInfo) {
+
 		this.senderToReceiverInfo = senderToReceiverInfo;
+	}
+
+	public Long getLcMasterId() {
+		return lcMasterId;
+	}
+
+	public void setLcMasterId(Long lcMasterId) {
+		this.lcMasterId = lcMasterId;
+	}
+
+	public Long getApplicantPartyId() {
+		return applicantPartyId;
+	}
+
+	public void setApplicantPartyId(Long applicantPartyId) {
+		this.applicantPartyId = applicantPartyId;
+	}
+
+	public Party getApplicant() {
+		return applicant;
+	}
+
+	public void setApplicant(Party applicant) {
+		this.applicant = applicant;
+	}
+
+	public Long getBeneficiaryPartyId() {
+		return beneficiaryPartyId;
+	}
+
+	public void setBeneficiaryPartyId(Long beneficiaryPartyId) {
+		this.beneficiaryPartyId = beneficiaryPartyId;
+	}
+
+	public Party getBeneficiary() {
+		return beneficiary;
+	}
+
+	public void setBeneficiary(Party beneficiary) {
+		this.beneficiary = beneficiary;
+	}
+
+	public String getApplicantName() {
+		return applicantName;
+	}
+
+	public void setApplicantName(String applicantName) {
+		this.applicantName = applicantName;
+	}
+
+	public String getBeneficiaryName() {
+		return beneficiaryName;
+	}
+
+	public void setBeneficiaryName(String beneficiaryName) {
+		this.beneficiaryName = beneficiaryName;
 	}
 }

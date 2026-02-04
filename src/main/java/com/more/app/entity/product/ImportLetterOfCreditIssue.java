@@ -17,7 +17,8 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class ImportLetterOfCreditIssue  extends AbstractPojo
 {
-
+	private Long lcMasterId;
+	
 	@Column(length = 11)
 	@UIAction(label = "Sender BIC")
 	private String senderBic;

@@ -11,6 +11,7 @@ import com.more.app.base.ui.product.LcPreAdviceView;
 import com.more.app.base.ui.product.LcView;
 import com.more.app.base.ui.product.MessagesView;
 import com.more.app.base.ui.product.OcpView;
+import com.more.app.base.ui.product.PartyView;
 import com.more.app.base.ui.product.RegisterView;
 import com.more.app.base.ui.product.ReportView;
 import com.more.app.base.ui.security.AppRoleView;
@@ -34,7 +35,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 
 @Route(value = "nav", layout = BaseLayout.class)
 public class NavigationPlatform extends VerticalLayout {
@@ -87,6 +87,7 @@ public class NavigationPlatform extends VerticalLayout {
 		productConfigSection.setExpanded(true);
 
 		SideNavItem productModuleSection = new SideNavItem("Product");
+		productModuleSection.addItem(new SideNavItem("Party", PartyView.class));
 		productModuleSection.addItem(new SideNavItem("Product Register", RegisterView.class));
 		productModuleSection.addItem(new SideNavItem("Outward Payment", OcpView.class));
 		productModuleSection.addItem(new SideNavItem("Letter of Credit", LcView.class));

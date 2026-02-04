@@ -46,6 +46,8 @@ public class RegisterUpdatePolicy implements Policy
 			
 			register.setWorkflowStatus("Waiting For " + register.getCurrentQueueName());
 			register.setEventStatus(Status.IP);
+			register.setTransactionStatus(Status.I);
+
 			
 			repository.save(register);
 			return  true;

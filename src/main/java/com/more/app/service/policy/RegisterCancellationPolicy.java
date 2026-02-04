@@ -24,6 +24,8 @@ public class RegisterCancellationPolicy implements Policy
 						
 			
 			register.setEventStatus(Status.CN);
+			register.setTransactionStatus(Status.I);
+
 			
 			repository.save(register);
 			return  true;

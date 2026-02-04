@@ -38,7 +38,6 @@ public class CurrencyCrudView extends BaseCrudComponent<Currency> implements Has
 
 	public CurrencyCrudView() {
 		super();
-		System.out.println("CALLED A");
 		Button getCountry = new Button("Get Country", new Icon(VaadinIcon.FLAG_CHECKERED), event -> {
 			Dialog dg = new Dialog();
 			CountryView cv = new CountryView(ui, dg, countryrepo);
@@ -51,7 +50,6 @@ public class CurrencyCrudView extends BaseCrudComponent<Currency> implements Has
 		ctryhl.setVerticalComponentAlignment(Alignment.BASELINE, countryNameTF, getCountry);
 
 		vl.add(codeTF, currencyTF, ctryhl, numericCodeTF, minorUnitTF);
-		System.out.println("CALLED C");
 	}
 
 	private TextField codeTF, currencyTF, countryNameTF;

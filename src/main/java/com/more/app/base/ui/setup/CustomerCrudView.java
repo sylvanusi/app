@@ -113,7 +113,7 @@ public class CustomerCrudView extends BaseCrudComponent<Customer> implements Has
 	public void initializeComponents()
 	{
 		customerTypeTF = new Select<String>();
-		customerTypeTF.setItems("", "Customer", "Bank");
+		customerTypeTF.setItems("", "Customer", "Beneficiary", "Bank");
 		customerTypeTF.setRequiredIndicatorVisible(true);
 
 		fullNameTF = new TextField();

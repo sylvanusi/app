@@ -16,13 +16,14 @@ import com.more.app.entity.Branch;
 import com.more.app.entity.Customer;
 import com.more.app.entity.Product;
 import com.more.app.entity.ProductReferenceNumberDefination;
-import com.more.app.entity.ProductTypeEventPolicy;
 import com.more.app.entity.enums.ReferenceNumberItem;
 import com.more.app.entity.enums.Status;
 import com.more.app.entity.product.ProductWorkFlowQueue;
 import com.more.app.entity.product.Register;
 import com.more.app.repository.BranchRepository;
 import com.more.app.repository.CustomerRepository;
+import com.more.app.repository.product.LcMasterRepository;
+import com.more.app.repository.product.PartyRepository;
 import com.more.app.repository.product.RegisterRepository;
 import com.more.app.repository.productsetup.ProductReferenceNumberDefinationRepository;
 import com.more.app.repository.productsetup.ProductRepository;
@@ -39,7 +40,6 @@ import com.more.app.util.WorkFlowProductItemUtil;
 import com.more.app.util.annotations.UIActionUtil;
 import com.more.app.util.annotations.WorkflowUtil;
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -75,10 +75,10 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 	private Register entity;
 	private String pageMode = "";
 	private String pageTitle = "Register";
-	private TextField productTF;
+	private TextField productTF, transactionStatusTF;
 	private Button searchproduct;
 	private HorizontalLayout productHl, amountHl, applicantHl, beneficiaryHl, branchHl;
-	private Checkbox transactionStatusBox;
+	private Checkbox cancellationStatusBox;
 	private DatePicker regDatePicker;
 	private Product product;
 	private Binder<Register> binder = new Binder();
@@ -97,11 +97,8 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 
 	private TabSheet tabSheet = new TabSheet();
 
-	private ProductTypeEventPolicy policyEntity;
 	private ProductWorkFlowQueue currentQueue;
 	private ProductWorkFlowQueue nextQueue;
-
-	private Long currentQueuePolicyId = -1L;
 
 	private H5 title = new H5();
 	private RadioButtonGroup<String> enableApproveorDecline;
@@ -119,16 +116,21 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 	private BranchRepository branchRepository;
 	@Autowired
 	private ProductTypeEventPolicyRepository productTypeEventPolicyRepository;
+	@Autowired
+	private LcMasterRepository lcMasterRepository;
+	@Autowired
+	private PartyRepository partyRepository;
 
 	// private RegisterCreatePolicy policy;
 
 	@Autowired
 	private ProductWorkFlowQueueRepository workflowQueueRepo;
+	
+	@Autowired
+	private ReferenceNumberItemUtil refNoUtil;
 
 	public RegisterCrudView() {
 		super();
-		System.out.println(">>>>>>>>>>>>>>>>>>> ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
-
 	}
 
 	private void saveAction() {
@@ -149,8 +151,6 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 
 	@PostConstruct
 	private void init() {
-		System.out.println(">>>>>>>>>>>>>>>>>>> GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
-
 		tabSheet.addThemeVariants(TabSheetVariant.AURA_TABS_FILLED, TabSheetVariant.AURA_TABS_ACCENT);
 		title.setText(pageTitle);
 		title.getElement().getStyle().set("font-weight", "bold");
@@ -190,6 +190,11 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 		eventTf = new TextField(UIActionUtil.getFieldLabel(Register.class, "eventName"));
 		eventTf.setMaxLength(35);
 		eventTf.setReadOnly(true);
+		
+		transactionStatusTF = new TextField(UIActionUtil.getFieldLabel(Register.class, "transactionStatus"));
+		transactionStatusTF.setMaxLength(35);
+		transactionStatusTF.setVisible(true);
+		transactionStatusTF.setReadOnly(true);
 
 		currentQueueTf = new TextField(UIActionUtil.getFieldLabel(Register.class, "currentQueueName"));
 		currentQueueTf.setMaxLength(35);
@@ -240,8 +245,8 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 		branchTf.setMaxLength(35);
 		branchTf.setWidthFull();
 
-		transactionStatusBox = new Checkbox("Cancel Transaction");
-		transactionStatusBox.setVisible(false);
+		cancellationStatusBox = new Checkbox("Cancel Transaction");
+		cancellationStatusBox.setVisible(false);
 
 		productHl = new HorizontalLayout();
 		productHl.add(productTF, searchproduct);
@@ -279,7 +284,7 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 
 		formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
 		formLayout.add(applicantHl, beneficiaryHl, amountHl, branchHl, transactionReferenceTF, internalReferenceTF,regDatePicker,
-				transactionStatusBox, reasonComponent);
+				cancellationStatusBox, reasonComponent, transactionStatusTF);
 		formLayout.setVisible(false);
 
 		saveButton = new Button("Save to Current Queue", new Icon(VaadinIcon.EDIT));
@@ -355,6 +360,9 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 					productTF.setValue(product.getProductName());
 					moduleTF.setValue(product.getModuleCode());
 					productTypeTF.setValue(product.getTypeCode());
+					
+					//transactionReferenceTF.setValue(refNoUtil.generateTransactionReference(refNoRepository.findByProductId(product.getId()),
+					//		product));
 					ccySF.setItems(product.getAllowedCurrencies());
 
 					binder.getBean().setProduct(product);
@@ -373,17 +381,17 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 					binder.getBean().setWorkflowReference(register.getWorkflowReference());
 					binder.getBean().setWorkflowReferenceNo(register.getWorkflowReferenceNo());
 					binder.getBean().setNextQueueFlowSequence(register.getNextQueue().getFlowSequence());
-					binder.getBean().setTransactionStatus(Status.IP);
+					binder.getBean().setTransactionStatus(Status.I);
 					binder.getBean().setNextQueueEventId(register.getNextQueue().getEventId());
 					binder.getBean().setCurrentQueueEventId(register.getCurrentQueue().getEventId());
 
-					if (!useccy && !usebranch) {
-						String referenceNo = ReferenceNumberItemUtil.generateTransactionReference(refNoDefList,
-								binder.getBean());
-						binder.getBean().setTransactionReference(referenceNo);
-						transactionReferenceTF.setValue(referenceNo);
-						saveAction();
-					}
+					//if (register.getTransactionReference() != null) {
+						//String referenceNo = refNoUtil.generateTransactionReference(refNoRepository.findByProductId(product.getId()),
+						//		product);
+						//binder.getBean().setTransactionReference(referenceNo);
+						//transactionReferenceTF.setValue(referenceNo);
+						//saveAction();
+					//}
 					register = repository.save(binder.getBean());
 
 					register = repository.findById(register.getId()).get();
@@ -404,6 +412,7 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 						enableApproveorDecline.setItems("Enable Submit");
 					}
 				}
+				
 			});
 			view.add(selectItem);
 
@@ -414,6 +423,8 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 		searchApplicant.addClickListener(event -> {
 			Dialog dg = new Dialog();
 			CustomerView view = new CustomerView(ui, dg, custRepository);
+			view.customerTypeTF.setValue("Customer");
+			view.customerTypeTF.setReadOnly(true);
 			view.select.setVisible(false);
 			Button selectItem = new Button("Select Item");
 			selectItem.setSizeFull();
@@ -430,11 +441,17 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 			view.add(selectItem);
 			dg.add(view);
 			dg.open();
+			dg.addAttachListener(evt -> {
+				view.updateGrid(view);
+			});
 		});
 
 		searchBeneficiary.addClickListener(event -> {
 			Dialog dg = new Dialog();
 			CustomerView view = new CustomerView(ui, dg, custRepository);
+			view.customerTypeTF.setValue("Beneficiary");
+			view.customerTypeTF.setReadOnly(true);
+			//.grid.setItems(custRepository.findByCustomerType("Beneficiary"));
 			view.select.setVisible(false);
 			Button selectItem = new Button("Select Item");
 			selectItem.setSizeFull();
@@ -450,7 +467,9 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 			});
 			view.add(selectItem);
 			dg.add(view);
-			dg.open();
+			dg.open();dg.addAttachListener(evt -> {
+				view.updateGrid(view);
+			});
 		});
 
 		searchBranch.addClickListener(event -> {
@@ -471,16 +490,18 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 				}
 			});
 			view.add(selectItem);
+			
 			dg.add(view);
 			dg.open();
+			
 		});
 
-		transactionStatusBox.addValueChangeListener(event -> {
+		cancellationStatusBox.addValueChangeListener(event -> {
 			if (event.getValue()) {
 				binder.getBean().setTransactionStatus(Status.CN);
 				reasonComponent.setVisible(true);
 			} else {
-				binder.getBean().setTransactionStatus(Status.IP);
+				binder.getBean().setTransactionStatus(Status.I);
 				if (reasonComponent.getCancellationReasions().isEmpty())
 					reasonComponent.setVisible(false);
 				else
@@ -552,6 +573,11 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 					RegisterApprovalPolicy policy = new RegisterApprovalPolicy();
 					policy.setRepository(repository);
 					policy.setWorflowQueueRepo(workflowQueueRepo);
+					policy.setRefNoUtil(refNoUtil);
+					policy.setRefNoDefRepository(refNoRepository);
+					policy.setLcMasterRepository(lcMasterRepository);
+					policy.setPartyRepository(partyRepository);
+					policy.setCustomerRepository(custRepository);
 					policy.executePolicy(register);
 				} else if (policyName.equals(RegisterPolicyEnum.REGISTER_CANCELLATION_POLICY.getPolicyName())) {
 					RegisterCancellationPolicy policy = new RegisterCancellationPolicy();
@@ -624,10 +650,12 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 			binder.forField(nextQueueTF).bind(Register::getNextQueueName, Register::setNextQueueName);
 			binder.forField(ccySF).bind(Register::getTransactionCcy, Register::setTransactionCcy);
 			binder.forField(regDatePicker).bind(Register::getRegistrationDate, Register::setRegistrationDate);
+			binder.forField(transactionStatusTF).bind(Register::getTransactionStatus_String, Register::setTransactionStatus_String);
+			
 			
 
-			transactionStatusBox.setVisible(entity.getId() != null);
-			transactionStatusBox.setValue(Status.CN.equals(entity.getTransactionStatus()));
+			cancellationStatusBox.setVisible(entity.getId() != null);
+			cancellationStatusBox.setValue(Status.CN.equals(entity.getTransactionStatus()));
 
 			boolean prodIdIsNotNull = (entity.getProductId() != null);
 			boolean approveStatus = entity.getTransactionStatus().equals(Status.AP);
@@ -652,7 +680,7 @@ public class RegisterCrudView extends BaseCrudComponent<Register> implements Has
 			if (entity != null && !entity.getCancelReasons().isEmpty()) {
 				reasonComponent.setVisible(true);
 				reasonComponent.setCancellationReasons(entity.getCancelReasons());
-				transactionStatusBox.setValue(true);
+				cancellationStatusBox.setValue(true);
 			}
 
 			if (entity.getId() != null)

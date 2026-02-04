@@ -11,4 +11,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	//fullName, customerNo, customerType
 	List<Customer> findByFullNameStartsWith(String paramCode);
 	List<Customer> findByFullNameStartsWithAndCustomerNoStartsWithAndCustomerTypeStartsWith(String fullName, String customerNo, String customerType);
+	List<Customer> findByCustomerType(String customerType);
 }

@@ -45,8 +45,6 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 	protected boolean hasDialogue = false;
 	protected BaseView<T> view;
 	private JpaRepository<T, Long> repository;
-	
-	//protected JpaRepository<T> repository;
 
 	public BaseView()
 	{
@@ -89,6 +87,7 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		loadComponents();
 		setSpacing(true);
 		setMargin(true);
+		getElement().getStyle().set("background-color", "#ffffff");
 	}
 
 	public void addBaseComponentsandStyle()
@@ -117,7 +116,7 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		add(hlheader, hr);
 		
 		VerticalLayout innerVl = new VerticalLayout();
-		innerVl.getElement().getStyle().set("background-color", "white");
+		innerVl.getElement().getStyle().set("background-color", "#ffffff");
 		
 		  
 		  hr.getElement().getStyle().set("border-top", "1.0px solid #000000");
@@ -193,6 +192,8 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 			remove(hl);
 		
 		add(innerVl);
+		
+		hl.getElement().getStyle().set("background-color", "#ffffff");
 	}
 	
 	@PostConstruct

@@ -29,8 +29,6 @@ public class WorkFlowProductItemUtil
 		entity.setWorkflowStatus(queue.getQueueName() + " Processing");
 		entity.setWorkflowReference(queue.getEventCode() + "001");
 		entity.setWorkflowReferenceNo(1);
-		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-		System.out.println(entity.toString());
 		return entity;
 	}
 

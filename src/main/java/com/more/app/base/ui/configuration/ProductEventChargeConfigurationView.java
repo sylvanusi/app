@@ -93,6 +93,7 @@ public class ProductEventChargeConfigurationView extends VerticalLayout {
 			List<ProductTypeEvent> evtList = productTypeEventRepo.findByProductTypeId(product.getType().getId());
 			eventRB.setItems(evtList);
 
+			if(evtList.size() > 0)
 			eventRB.setValue(evtList.get(0));
 		}
 	}

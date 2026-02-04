@@ -30,7 +30,7 @@ public class CustomerView extends BaseView<Customer>
 	public static final Long resourceView = Long.valueOf(36L);
 	private TextField fullNameTF;
 	private Select<Boolean> correspondentBox;
-	private Select<String> customerTypeTF;
+	public Select<String> customerTypeTF;
 	private TextField customerNoTF;
 	
 	@Autowired
@@ -50,7 +50,7 @@ public class CustomerView extends BaseView<Customer>
 	public <T> CustomerView(DialogSelectEntity dialog, Dialog dg, JpaRepository repository)
 	{
 		super(dialog, dg, repository);
-		this.repository = (CustomerRepository) repository;
+		this.repository = (CustomerRepository) repository;	
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class CustomerView extends BaseView<Customer>
 		correspondentBox.setLabel(UIActionUtil.getFieldLabel(Customer.class, "correspondent"));
 
 		customerTypeTF = new Select<String>();
-		customerTypeTF.setItems("", "Customer", "Bank");
+		customerTypeTF.setItems("", "Customer", "Beneficiary", "Bank");
 		customerTypeTF.setLabel(UIActionUtil.getFieldLabel(Customer.class, "customerType"));
 
 		grid.addColumn(Customer::getFullName).setHeader(UIActionUtil.getFieldLabel(Customer.class, "fullName"));
@@ -126,6 +126,19 @@ public class CustomerView extends BaseView<Customer>
 	public void reloadView()
 	{
 		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
+	}
+	
+	public void updateGrid(CustomerView view)
+	{
+		if(view.customerTypeTF.getValue() != null && !view.customerTypeTF.getValue().isBlank())
+		{
+			view.grid.setItems(new ArrayList<>());
+			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+			System.out.println(view.repository.findByCustomerType(view.customerTypeTF.getValue()).size());
+			view.grid.setItems(view.repository.findByCustomerType(view.customerTypeTF.getValue()));
+			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< grid updated >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+		}
 	}
 
 	@Override

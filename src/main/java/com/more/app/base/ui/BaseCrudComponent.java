@@ -36,6 +36,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 	public Button confirmButton, addewButton, closeButton;
 	public Hr hr1 = new Hr();
 	public HorizontalLayout hl = new HorizontalLayout();
+	public HorizontalLayout hlheader = new HorizontalLayout();
 
 	@SuppressWarnings("unchecked")
 	public BaseCrudComponent() {
@@ -129,7 +130,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		title.getElement().getStyle().set("font-weight", "bold");
 
-		HorizontalLayout hlheader = new HorizontalLayout();
+		
 		hlheader.setPadding(false);
 		hlheader.setMargin(false);
 		hlheader.setSpacing(true);
@@ -175,7 +176,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		closeButton.getElement().getStyle().set("color", "black");
 		closeButton.getElement().getStyle().set("border", "0.2px solid #000000");
-		closeButton.getElement().getStyle().set("background-color", "white");
+		closeButton.getElement().getStyle().set("background-color", "#FFFDD0");
 
 		setHeight("100%");
 		setWidthFull();
@@ -184,6 +185,8 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 		setPadding(false);
 		setMargin(true);
 		setSpacing(true);
+		//hl.getElement().getStyle().set("background-color", "#fffff0");
+		//getElement().getStyle().set("background-color", "#CFCFCF");
 	}
 
 	public abstract Class<?> getCloseNavigationClass();

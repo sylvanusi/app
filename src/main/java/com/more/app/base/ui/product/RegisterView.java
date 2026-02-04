@@ -75,7 +75,6 @@ public class RegisterView extends BaseView<Register>
 	@Override
 	protected void onAttach(AttachEvent attachEvent)
 	{
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
 		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
 	}
 

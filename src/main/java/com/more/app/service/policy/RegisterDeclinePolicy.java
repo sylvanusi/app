@@ -42,7 +42,7 @@ public class RegisterDeclinePolicy implements Policy
 			
 			register.setWorkflowStatus("Approved");
 			register.setEventStatus(Status.C);
-			register.setTransactionStatus(Status.AP);
+			register.setTransactionStatus(Status.I);
 			repository.save(register);
 			return  true;
 		} else

@@ -33,6 +33,10 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Product Type", errorlabel = "Product Type is required")
 	@Formula("(select b.product_Type from product a , Product_Type b where a.type_id = b.id and a.id = product_Id)")
 	private String productType;
+	
+	@UIAction(label = "Product Type", errorlabel = "Product Type is required")
+	@Formula("(select b.code from product a , Product_Type b where a.type_id = b.id and a.id = product_Id)")
+	private String productTypeCode;
 
 	@UIAction(label = "Product Name", errorlabel = "Product Name is required")
 	@Formula("(select a.product_Name from product a where a.id = product_Id)")
@@ -112,6 +116,17 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Transacting Branch", errorlabel = "Transacting Branch is required")
 	@JoinColumn(referencedColumnName = "id")
 	private Long transactionBranchId;
+	
+	@Auditable(enableAudit = true, fieldNo = 13)
+	@UIAction(label = "Transacting Branch", errorlabel = "Transacting Branch is required")
+	@Formula("(select a.code from Branch a where a.id = transaction_Branch_Id)")
+	private String transactionBranchCode;
+	
+	@Auditable(enableAudit = true, fieldNo = 13)
+	@UIAction(label = "Transacting Branch", errorlabel = "Transacting Branch is required")
+	@Formula("(select a.branch_No from Branch a where a.id = transaction_Branch_Id)")
+	private String transactionBranchNo;
+	
 
 	@Auditable(enableAudit = true, fieldNo = 14)
 	@UIAction(label = "Work Flow Ref", errorlabel = "Work Flow Ref is required")
@@ -195,6 +210,9 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	@UIAction(label = "Transaction Status", errorlabel = "Transaction Status is required")
 	@Column(length = 1)
 	private Status transactionStatus;
+	
+	@Transient
+	private String transactionStatus_String;
 
 	@Auditable(enableAudit = true, fieldNo = 19)
 	@UIAction(label = "Event Status", errorlabel = "Event Status is required")
@@ -342,6 +360,14 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 
 	public void setTransactionStatus(Status transactionStatus) {
 		this.transactionStatus = transactionStatus;
+	}
+	
+	public String getTransactionStatus_String() {
+		return transactionStatus.getStatus();
+	}
+
+	public void setTransactionStatus_String(String transactionStatus_String) {
+		this.transactionStatus_String =  transactionStatus.getStatus();
 	}
 
 	public Set<CancellationReason> getCancelReasons() {
@@ -536,5 +562,49 @@ public class Register extends AbstractPojo implements WorkFlowProductItem {
 	public void setRegistrationDate(LocalDate registrationDate) {
 		this.registrationDate = registrationDate;
 	}
+
+	public String getTransactionBranchCode() {
+		return transactionBranchCode;
+	}
+
+	public void setTransactionBranchCode(String transactionBranchCode) {
+		this.transactionBranchCode = transactionBranchCode;
+	}
+
+	public String getTransactionBranchNo() {
+		return transactionBranchNo;
+	}
+
+	public void setTransactionBranchNo(String transactionBranchNo) {
+		this.transactionBranchNo = transactionBranchNo;
+	}
+
+	public String getProductTypeCode() {
+		return productTypeCode;
+	}
+
+	public void setProductTypeCode(String productTypeCode) {
+		this.productTypeCode = productTypeCode;
+	}
+
+	@Override
+	public String toString() {
+		return "Register [module=" + module + ", productType=" + productType + ", productName=" + productName
+				+ ", product=" + product + ", productId=" + productId + ", transactionReference=" + transactionReference
+				+ ", internalReference=" + internalReference + ", transactionCcy=" + transactionCcy
+				+ ", transactionAmount=" + transactionAmount + ", applicant=" + applicant + ", applicantId="
+				+ applicantId + ", applicantName=" + applicantName + ", beneficiaryCustomer=" + beneficiaryCustomer
+				+ ", beneficiaryCustomerId=" + beneficiaryCustomerId + ", beneficiaryCustomerName="
+				+ beneficiaryCustomerName + ", transactionBranch=" + transactionBranch + ", transactionBranchName="
+				+ transactionBranchName + ", transactionBranchId=" + transactionBranchId + ", transactionBranchCode="
+				+ transactionBranchCode + ", transactionBranchNo=" + transactionBranchNo + ", workflowReference="
+				+ workflowReference + ", workflowReferenceNo=" + workflowReferenceNo + ", workflowStatus="
+				+ workflowStatus + ", transactionStatus=" + transactionStatus
+				+ ", transactionStatus_String=" + transactionStatus_String + ", eventStatus=" + eventStatus
+				+ ", cancelReasons=" + cancelReasons + ", declineComments=" + declineComments + ", registrationDate="
+				+ registrationDate + "]";
+	}
+	
+	
 
 }

@@ -138,11 +138,13 @@ public class WorkflowConfigurationView extends VerticalLayout {
 
 			List<ProductTypeEvent> evtList = eventRepository.findByProductTypeId(product.getType().getId());
 			eventRB.setItems(evtList);
-			eventRB.setValue(evtList.get(0));
+			if (evtList.size() > 0) {
+				eventRB.setValue(evtList.get(0));
 
-			List<ProductWorkFlowQueue> queueList = repository.findByProductIdAndEventId(product.getId(),
-					eventRB.getValue().getId());
-			workFlowGrid.setItems(queueList);
+				List<ProductWorkFlowQueue> queueList = repository.findByProductIdAndEventId(product.getId(),
+						eventRB.getValue().getId());
+				workFlowGrid.setItems(queueList);
+			}
 		}
 	}
 
@@ -175,8 +177,8 @@ public class WorkflowConfigurationView extends VerticalLayout {
 			addQueuebtn = new Button("Add");
 
 			add(queuenameTF, queueTypeCb, eventPolicyCb, cbFirstQueue, cbFinalQueue, addQueuebtn);
-			setVerticalComponentAlignment(Alignment.BASELINE, queuenameTF, queueTypeCb, eventPolicyCb, cbFirstQueue, cbFinalQueue, addQueuebtn);
-
+			setVerticalComponentAlignment(Alignment.BASELINE, queuenameTF, queueTypeCb, eventPolicyCb, cbFirstQueue,
+					cbFinalQueue, addQueuebtn);
 
 			queueTypeCb.addValueChangeListener(event -> {
 				eventPolicyCb.clear();
@@ -188,7 +190,7 @@ public class WorkflowConfigurationView extends VerticalLayout {
 						cbFirstQueue.setEnabled(false);
 						cbFinalQueue.setValue(false);
 						cbFinalQueue.setEnabled(false);
-						
+
 					} else {
 						eventPolicyCb.setItems(
 								policyRepo.findByEventIdAndInputQueueType(getWfEntity().getEvent().getId(), false));

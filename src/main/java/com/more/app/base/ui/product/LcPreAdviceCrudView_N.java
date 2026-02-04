@@ -47,9 +47,7 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 		
 		super();
 		setHeightFull();
-		setWidthFull();
-
-		
+		setWidthFull();	
 	}
 
 	private Select formOfDocumentaryCrSF, currencyCodeSF;
@@ -57,7 +55,7 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 			finalDestinationTF;
 	private DatePicker dateOfExpiryDP, latestShipmentDF;
 	private CustomAccordionPanel applicantDtlsPanel, beneficiaryDtlsPanel, availableWithDtlsPanel, advThrBankPartyDtls;
-	private PartyDetailsCrudView applicantPDF, beneficiaryPDF, availableWithByPDF, advThrBankPartyPDF;
+	//private PartyDetailsCrudView applicantPDF, beneficiaryPDF, availableWithByPDF, advThrBankPartyPDF;
 	private NumberField amountOfDocumentaryCreditNF, tolerance1NF, tolerance2NF;
 	private TextArea additionalAmountsCoveredTA, shipmentPeriodTA, goodsDescriptionTA, narrativeTA,
 			senderToReceiverInfoTA;
@@ -72,6 +70,8 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 	
 	@PostConstruct
 	private void init() {
+		hl.setVisible(false);
+		hr1.setVisible(false);
 		entity = new ImportLetterOfCreditPreAdvise();
 		formOfDocumentaryCrSF = new Select();
 		formOfDocumentaryCrSF.setItems("Irrevocable", "Irrevocable and Transferable", "Irrevocable Standby LC",
@@ -107,22 +107,22 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 		binder.forField(placeOfExpiryTF).bind("placeOfExpiry");
 
 		Party applicantParty = entity.getApplicant() != null ? entity.getApplicant() : new Party();
-		applicantPDF = new PartyDetailsCrudView(applicantParty);
+		//applicantPDF = new PartyDetailsCrudView(applicantParty);
 		applicantDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "applicant"));
 
-		binder.forField(applicantPDF).bind("applicant");
+		//binder.forField(applicantPDF).bind("applicant");
 
 		Party beneficiaryParty = entity.getBeneficiary() != null ? entity.getBeneficiary() : new Party();
-		beneficiaryPDF = new PartyDetailsCrudView(beneficiaryParty);
+		//beneficiaryPDF = new PartyDetailsCrudView(beneficiaryParty);
 		beneficiaryDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "beneficiary"));
 
-		binder.forField(beneficiaryPDF).bind("beneficiary");
+		//binder.forField(beneficiaryPDF).bind("beneficiary");
 
 		Party availableWithBy = entity.getAvailableWithBy() != null ? entity.getAvailableWithBy() : new Party();
-		availableWithByPDF = new PartyDetailsCrudView(availableWithBy);
+		//availableWithByPDF = new PartyDetailsCrudView(availableWithBy);
 		availableWithDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "availableWithBy"));
 
-		binder.forField(availableWithByPDF).bind("availableWithBy");
+		//binder.forField(availableWithByPDF).bind("availableWithBy");
 
 		currencyCodeSF = new Select();
 		currencyCodeSF.setItems("USD", "GBP", "NGN");
@@ -214,10 +214,10 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 		binder.forField(goodsDescriptionTA).bind("goodDesription");
 
 		Party advThrBankParty = entity.getAdvThrBankParty() != null ? entity.getAdvThrBankParty() : new Party();
-		advThrBankPartyPDF = new PartyDetailsCrudView(advThrBankParty);
+		//advThrBankPartyPDF = new PartyDetailsCrudView(advThrBankParty);
 		advThrBankPartyDtls = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "advThrBankParty"));
 
-		binder.forField(advThrBankPartyPDF).bind("advThrBankParty");
+		//binder.forField(advThrBankPartyPDF).bind("advThrBankParty");
 
 		narrativeTA = new TextArea();
 		narrativeTA.setLabel(UILabelUtil.getFieldLabel(entity, "narrative"));
@@ -288,9 +288,9 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 				tolerancehl);
 
 		lcdtlspanel.add(basicdtlsFL);
-		applicantDtlsPanel.add(applicantPDF);
-		beneficiaryDtlsPanel.add(beneficiaryPDF);
-		availableWithDtlsPanel.add(availableWithByPDF);
+		//applicantDtlsPanel.add(applicantPDF);
+		//beneficiaryDtlsPanel.add(beneficiaryPDF);
+		//availableWithDtlsPanel.add(availableWithByPDF);
 
 		shipingDetailsFL.setMaxWidth("1000px");
 		shipingDetailsFL.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
@@ -299,7 +299,7 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 				finalDestinationTF, latestShipmentDF, shipmentPeriodTA, goodsDescriptionTA);
 
 		shipingDtls.add(shipingDetailsFL);
-		advThrBankPartyDtls.add(advThrBankPartyPDF);
+		//advThrBankPartyDtls.add(advThrBankPartyPDF);
 
 		otherDtlPanelFL.setMaxWidth("1000px");
 		otherDtlPanelFL.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
@@ -314,8 +314,8 @@ public class LcPreAdviceCrudView_N extends BaseCrudComponent<ImportLetterOfCredi
 		Hr hr5 = new Hr();
 		Hr hr6 = new Hr();
 		
-		vls.add(title, hr,basicdtlsFL,hr1, applicantPDF, hr2, beneficiaryPDF, hr3, availableWithByPDF, hr4, shipingDetailsFL,hr5,
-				advThrBankPartyPDF,hr6, otherDtlsPanel);
+		//vls.add(title, hr,basicdtlsFL,hr1, applicantPDF, hr2, beneficiaryPDF, hr3, availableWithByPDF, hr4, shipingDetailsFL,hr5,
+		//		advThrBankPartyPDF,hr6, otherDtlsPanel);
 
 		//vls.add(title, lcdtlspanel, applicantDtlsPanel, beneficiaryDtlsPanel, availableWithDtlsPanel, shipingDtls,
 			//	advThrBankPartyDtls, otherDtlPanelFL);

@@ -101,9 +101,9 @@ public class LcPreAdviceCrudView extends Dialog {
 				tolerancehl);
 
 		lcdtlspanel.add(basicdtlsFL);
-		applicantDtlsPanel.add(applicantPDF);
-		beneficiaryDtlsPanel.add(beneficiaryPDF);
-		availableWithDtlsPanel.add(availableWithByPDF);
+		//applicantDtlsPanel.add(applicantPDF);
+		//beneficiaryDtlsPanel.add(beneficiaryPDF);
+		//availableWithDtlsPanel.add(availableWithByPDF);
 
 		shipingDetailsFL.setMaxWidth("1000px");
 		shipingDetailsFL.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
@@ -112,7 +112,7 @@ public class LcPreAdviceCrudView extends Dialog {
 				finalDestinationTF, latestShipmentDF, shipmentPeriodTA, goodsDescriptionTA);
 
 		shipingDtls.add(shipingDetailsFL);
-		advThrBankPartyDtls.add(advThrBankPartyPDF);
+		//advThrBankPartyDtls.add(advThrBankPartyPDF);
 
 		otherDtlPanelFL.setMaxWidth("1000px");
 		otherDtlPanelFL.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
@@ -139,7 +139,7 @@ public class LcPreAdviceCrudView extends Dialog {
 			finalDestinationTF;
 	private DatePicker dateOfExpiryDP, latestShipmentDF;
 	private CustomAccordionPanel applicantDtlsPanel, beneficiaryDtlsPanel, availableWithDtlsPanel, advThrBankPartyDtls;
-	private PartyDetailsCrudView applicantPDF, beneficiaryPDF, availableWithByPDF, advThrBankPartyPDF;
+	//private PartyDetailsCrudView applicantPDF, beneficiaryPDF, availableWithByPDF, advThrBankPartyPDF;
 	private NumberField amountOfDocumentaryCreditNF, tolerance1NF, tolerance2NF;
 	private TextArea additionalAmountsCoveredTA, shipmentPeriodTA, goodsDescriptionTA, narrativeTA,
 			senderToReceiverInfoTA;
@@ -187,22 +187,22 @@ public class LcPreAdviceCrudView extends Dialog {
 		binder.forField(placeOfExpiryTF).bind("placeOfExpiry");
 
 		Party applicantParty = entity.getApplicant() != null ? entity.getApplicant() : new Party();
-		applicantPDF = new PartyDetailsCrudView(applicantParty);
+		//applicantPDF = new PartyDetailsCrudView(applicantParty);
 		applicantDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "applicant"));
 
-		binder.forField(applicantPDF).bind("applicant");
+		//binder.forField(applicantPDF).bind("applicant");
 
 		Party beneficiaryParty = entity.getBeneficiary() != null ? entity.getBeneficiary() : new Party();
-		beneficiaryPDF = new PartyDetailsCrudView(beneficiaryParty);
+		//beneficiaryPDF = new PartyDetailsCrudView(beneficiaryParty);
 		beneficiaryDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "beneficiary"));
 
-		binder.forField(beneficiaryPDF).bind("beneficiary");
+		//binder.forField(beneficiaryPDF).bind("beneficiary");
 
 		Party availableWithBy = entity.getAvailableWithBy() != null ? entity.getAvailableWithBy() : new Party();
-		availableWithByPDF = new PartyDetailsCrudView(availableWithBy);
+		//availableWithByPDF = new PartyDetailsCrudView(availableWithBy);
 		availableWithDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "availableWithBy"));
 
-		binder.forField(availableWithByPDF).bind("availableWithBy");
+		//binder.forField(availableWithByPDF).bind("availableWithBy");
 
 		currencyCodeSF = new Select();
 		currencyCodeSF.setItems("USD", "GBP", "NGN");
@@ -293,11 +293,11 @@ public class LcPreAdviceCrudView extends Dialog {
 		goodsDescriptionTA.setLabel(UILabelUtil.getFieldLabel(entity, "goodDesription"));
 		binder.forField(goodsDescriptionTA).bind("goodDesription");
 
-		Party advThrBankParty = entity.getAdvThrBankParty() != null ? entity.getAdvThrBankParty() : new Party();
-		advThrBankPartyPDF = new PartyDetailsCrudView(advThrBankParty);
-		advThrBankPartyDtls = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "advThrBankParty"));
+		//Party advThrBankParty = entity.getAdvThrBankParty() != null ? entity.getAdvThrBankParty() : new Party();
+		//advThrBankPartyPDF = new PartyDetailsCrudView(advThrBankParty);
+		//advThrBankPartyDtls = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "advThrBankParty"));
 
-		binder.forField(advThrBankPartyPDF).bind("advThrBankParty");
+		//binder.forField(advThrBankPartyPDF).bind("advThrBankParty");
 
 		narrativeTA = new TextArea();
 		narrativeTA.setLabel(UILabelUtil.getFieldLabel(entity, "narrative"));

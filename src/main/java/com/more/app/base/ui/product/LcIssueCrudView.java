@@ -260,12 +260,12 @@ public class LcIssueCrudView extends Dialog
 
 		lcdtlspanel.add(basicdtlsFL);
 
-		applicantDtlsPanel.add(applicantPDF);
+		//applicantDtlsPanel.add(applicantPDF);
 
-		beneficiaryDtlsPanel.add(beneficiaryPDF);
+		//beneficiaryDtlsPanel.add(beneficiaryPDF);
 
-		availableWithDtlsPanel.add(availableWithByPDF);
-		draweeDtls.add(draweePDF);
+		//availableWithDtlsPanel.add(availableWithByPDF);
+		//draweeDtls.add(draweePDF);
 
 		shipingDetailsFL.setMaxWidth("1000px");
 		shipingDetailsFL.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
@@ -280,9 +280,9 @@ public class LcIssueCrudView extends Dialog
 
 		// requestedConfirmationPartyPDF, reimbursingBankPartyPDF,advThrBankPartyPDF
 
-		requestedConfirmationPartyDtls.add(requestedConfirmationPartyPDF);
-		reimbursingBankPartyDtls.add(reimbursingBankPartyPDF);
-		advThrBankPartyDtls.add(advThrBankPartyPDF);
+		//requestedConfirmationPartyDtls.add(requestedConfirmationPartyPDF);
+		//reimbursingBankPartyDtls.add(reimbursingBankPartyPDF);
+		//advThrBankPartyDtls.add(advThrBankPartyPDF);
 
 		instructionsToPayBankTA.setLabel(UILabelUtil.getFieldLabel(entity,"instructionsToPayBank"));
 		senderToReceiverInfoTA.setLabel(UILabelUtil.getFieldLabel(entity,"senderToReceiverInfo"));
@@ -329,8 +329,8 @@ public class LcIssueCrudView extends Dialog
 	private Select formOfDocumentaryCrSF, applicableRulesSF, confirmationInstructionSF, currencyCodeSF,
 			partialShipmentSF, transShipmentSF;
 	private NumberField amountOfDocumentaryCreditNF, tolerance1NF, tolerance2NF, periodOfPresentationDaysNF;
-	private PartyDetailsCrudView applicantPDF, beneficiaryPDF, availableWithByPDF, draweePDF,
-			requestedConfirmationPartyPDF, reimbursingBankPartyPDF, advThrBankPartyPDF;
+	//private PartyDetailsCrudView applicantPDF, beneficiaryPDF, availableWithByPDF, draweePDF,
+	//		requestedConfirmationPartyPDF, reimbursingBankPartyPDF, advThrBankPartyPDF;
 	private TextArea additionalAmountsCoveredTA, draftsatTA, mixedPaymentTA, negotiationDefferdPayTA, shipmentPeriodTA,
 			goodsDescriptionTA, documentsRequiredTA, additionalConditionTA, specialConditionsForBenTA,
 			specialConditionForRBTA, chargesTA, instructionsToPayBankTA, senderToReceiverInfoTA;
@@ -381,18 +381,18 @@ public class LcIssueCrudView extends Dialog
 		binder.forField(placeOfExpiryTF).bind("placeOfExpiry");
 
 		Party applicantParty = entity.getApplicant() != null ? entity.getApplicant() : new Party();
-		applicantPDF = new PartyDetailsCrudView(applicantParty);
-		binder.forField(applicantPDF).bind("applicant");
+		//applicantPDF = new PartyDetailsCrudView(applicantParty);
+		//binder.forField(applicantPDF).bind("applicant");
 		applicantDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "applicant"));
 
 		Party beneficiaryParty = entity.getBeneficiary() != null ? entity.getBeneficiary() : new Party();
-		beneficiaryPDF = new PartyDetailsCrudView(beneficiaryParty);
-		binder.forField(beneficiaryPDF).bind("beneficiary");
+		//beneficiaryPDF = new PartyDetailsCrudView(beneficiaryParty);
+		//binder.forField(beneficiaryPDF).bind("beneficiary");
 		beneficiaryDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "beneficiary"));
 
 		Party availableWithBy = entity.getAvailableWithBy() != null ? entity.getAvailableWithBy() : new Party();
-		availableWithByPDF = new PartyDetailsCrudView(availableWithBy);
-		binder.forField(availableWithByPDF).bind("availableWithBy");
+		//availableWithByPDF = new PartyDetailsCrudView(availableWithBy);
+		//binder.forField(availableWithByPDF).bind("availableWithBy");
 		availableWithDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "availableWithBy"));
 
 		confirmationInstructionSF = new Select();
@@ -415,8 +415,8 @@ public class LcIssueCrudView extends Dialog
 		binder.forField(tolerance2NF).withConverter(new DoubleToIntegerConverter()).bind("tolerance2");
 
 		Party drawee = entity.getDrawee() != null ? entity.getDrawee() : new Party();
-		draweePDF = new PartyDetailsCrudView(drawee);
-		binder.forField(draweePDF).bind("drawee");
+		//draweePDF = new PartyDetailsCrudView(drawee);
+		//binder.forField(draweePDF).bind("drawee");
 		draweeDtls = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "drawee"));
 
 		additionalAmountsCoveredTA = new TextArea();
@@ -485,20 +485,20 @@ public class LcIssueCrudView extends Dialog
 		Party requestedConfirmationParty = entity.getRequestedConfirmationParty() != null
 				? entity.getRequestedConfirmationParty()
 				: new Party();
-		requestedConfirmationPartyPDF = new PartyDetailsCrudView(requestedConfirmationParty);
-		binder.forField(requestedConfirmationPartyPDF).bind("requestedConfirmationParty");
+		//requestedConfirmationPartyPDF = new PartyDetailsCrudView(requestedConfirmationParty);
+		//binder.forField(requestedConfirmationPartyPDF).bind("requestedConfirmationParty");
 		requestedConfirmationPartyDtls = new CustomAccordionPanel(
 				UILabelUtil.getFieldLabel(entity, "requestedConfirmationParty"));
 
 		Party reimbursingBankParty = entity.getReimbursingBankParty() != null ? entity.getReimbursingBankParty()
 				: new Party();
-		reimbursingBankPartyPDF = new PartyDetailsCrudView(reimbursingBankParty);
-		binder.forField(reimbursingBankPartyPDF).bind("reimbursingBankParty");
+		//reimbursingBankPartyPDF = new PartyDetailsCrudView(reimbursingBankParty);
+		//binder.forField(reimbursingBankPartyPDF).bind("reimbursingBankParty");
 		reimbursingBankPartyDtls = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "reimbursingBankParty"));
 
 		Party advThrBankParty = entity.getAdvThrBankParty() != null ? entity.getAdvThrBankParty() : new Party();
-		advThrBankPartyPDF = new PartyDetailsCrudView(advThrBankParty);
-		binder.forField(advThrBankPartyPDF).bind("advThrBankParty");
+		//advThrBankPartyPDF = new PartyDetailsCrudView(advThrBankParty);
+		//binder.forField(advThrBankPartyPDF).bind("advThrBankParty");
 		advThrBankPartyDtls = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "advThrBankParty"));
 
 		instructionsToPayBankTA = new TextArea();

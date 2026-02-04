@@ -38,9 +38,11 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 	private int lastPosition = 0;
 
 	private ProductReferenceNumberDefinationRepository repository;
+	private ReferenceNumberItemUtil refNoUtil;
 
-	public ReferenceNumberDefinationView(ProductReferenceNumberDefinationRepository repository) {
+	public ReferenceNumberDefinationView(ProductReferenceNumberDefinationRepository repository, ReferenceNumberItemUtil refNoUtil) {
 		this.repository = repository;
+		this.refNoUtil = refNoUtil;
 		lbl.getElement().getStyle().set("font-weight", "bold");
 		addBtn = new Button("Add Reference Item");
 		saveBtn = new Button("Save Reference Items");
@@ -102,7 +104,7 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 	}
 
 	private void addButtonAction(ProductReferenceNumberDefination refNoItem) {
-		refNoItem.setRefItemValue(ReferenceNumberItemUtil.getReferenceNumberItemValue(refNoItem.getItem(), entity));
+		refNoItem.setRefItemValue(refNoUtil.getReferenceNumberItemValue(refNoItem.getItem(), entity));
 		refNoItem.setItemLength(refNoItem.getItem().getLength());
 		new ReferenceNumberItemsField(refNoItem);
 		fieldList.get(0).setLabels(fieldList.get(0));
@@ -157,7 +159,7 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 				refItemValue.clear();
 				refItemValue.setEnabled(true);
 				if (Objects.nonNull(refNoItem)) {
-					String code = ReferenceNumberItemUtil.getReferenceNumberItemValue(refNoItem, entity);
+					String code = refNoUtil.getReferenceNumberItemValue(refNoItem, entity);
 					refItemValue.setValue(code);
 					refItemValue.setEnabled(code.trim().length() == 0);
 					itemLength.setValue(refNoItem.getLength());
@@ -231,4 +233,14 @@ public class ReferenceNumberDefinationView extends VerticalLayout {
 	public void setRepository(ProductReferenceNumberDefinationRepository repository) {
 		this.repository = repository;
 	}
+
+	public ReferenceNumberItemUtil getRefNoUtil() {
+		return refNoUtil;
+	}
+
+	public void setRefNoUtil(ReferenceNumberItemUtil refNoUtil) {
+		this.refNoUtil = refNoUtil;
+	}
+	
+	
 }

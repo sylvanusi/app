@@ -23,6 +23,7 @@ import com.more.app.repository.productsetup.ProductTypeEventPolicyRepository;
 import com.more.app.repository.productsetup.ProductTypeEventRepository;
 import com.more.app.repository.productsetup.ProductTypeRepository;
 import com.more.app.repository.productsetup.ProductWorkFlowQueueRepository;
+import com.more.app.util.ReferenceNumberItemUtil;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -72,7 +73,9 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 	@Autowired
 	private ProductTypeEventRepository productTypeEventRepo;
 	@Autowired
-	private ProductEventSwiftRepository eventSwiftRepository;
+	private ProductEventSwiftRepository eventSwiftRepository;	
+	@Autowired
+	private ReferenceNumberItemUtil refNoUtil;
 	
 	public ProductConfigurationCrudView() {
 		super();
@@ -98,10 +101,10 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 		eventChargeView.setChargeDefRepository(chargeDefRepository);
 		eventSwiftView.setProductTypeEventRepo(eventRepository);
 		eventSwiftView.setRepository(eventSwiftRepository);
+		
+		referenceNoView.setRefNoUtil(refNoUtil);
 				
 		tabSheet.add("Main Details", vlMain);
-		
-
 
 		vl.add(tabSheet);
 		vl.setHeightFull();
@@ -173,7 +176,7 @@ public class ProductConfigurationCrudView extends BaseCrudComponent<Product> imp
 		workflowView = new WorkflowConfigurationView();
 		eventChargeView = new ProductEventChargeConfigurationView();
 		eventSwiftView = new ProductEventSwiftConfigurationView();
-		referenceNoView = new ReferenceNumberDefinationView(refNoDefRepository);
+		referenceNoView = new ReferenceNumberDefinationView(refNoDefRepository, refNoUtil);
 
 		productTypeCB.addValueChangeListener(event -> {
 			if ("ADD".equals(getPageMode()) || "ADDNEW".equals(getPageMode()))
