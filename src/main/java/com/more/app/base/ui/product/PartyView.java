@@ -67,10 +67,7 @@ public class PartyView  extends BaseView<Party> {
 		addBaseComponentsandStyle();
 		
 		searchb.addClickListener(e -> {
-			grid.setItems(new ArrayList<Party>());
-			
-			System.out.println(repository.findByBicCodeStartsWithAndNameStartsWithAndAccountStartsWith(bicCodeTF.getValue(), nameTF.getValue(), accountTF.getValue()).size());
-			
+			grid.setItems(new ArrayList<Party>());			
 		    grid.setItems(repository.findByBicCodeStartsWithAndNameStartsWithAndAccountStartsWith(bicCodeTF.getValue(), nameTF.getValue(), accountTF.getValue()));
 		});
 	}

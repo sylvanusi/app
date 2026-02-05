@@ -14,46 +14,51 @@ import jakarta.persistence.Transient;
 public class LcMaster extends AbstractPojo {
 	private static final long serialVersionUID = -3559711307824157622L;
 
-	// registerId, applicantPartyId, beneficiaryPartyId, lcCcy, lcAmount, lcEvent - Registered, lcStatus - Registered, eventStatus - idle
-	
+	// registerId, applicantPartyId, beneficiaryPartyId, lcCcy, lcAmount, lcEvent -
+	// Registered, lcStatus - Registered, eventStatus - idle
+
 	private Long registerId;
-	
+
 	@Transient
 	private Register register;
-	
-	@Formula("(select a.transactionReference from register a where a.id = register_Id)")
+
+	@Formula("(select a.transaction_Reference from register a where a.id = register_Id)")
 	private String lcReferenceNo;
 
-	@Formula("(select a.internalReference from register a where a.id = register_Id)")
+	@Formula("(select a.internal_Reference from register a where a.id = register_Id)")
 	private String internalReferenceNo;
 
 	private Long applicantPartyId;
-	private Long beneficiaryPartyId;
+	@Formula("(select a.name from Party a where a.id = applicant_Party_Id)")
+	private String applicantName;
 
+	private Long beneficiaryPartyId;
+	@Formula("(select a.name from Party a where a.id = beneficiary_Party_Id)")
+	private String beneficiaryName;
 	private String lcCcy;
 	private BigDecimal lcAmount;
-	
+
 	private BigDecimal utilisedAmount;
 	private String utilisedCcy;
-	
+
 	private BigDecimal outstandingAmount;
 	private String oustandingCcy;
-	
+
 	private BigDecimal liabilityAmount;
 	private String liabilityCcy;
-	
+
 	private LocalDate bookOffDate;
 	private LocalDate deactivationDate;
 	private LocalDate issueDate;
 	private LocalDate expiryDate;
 	private LocalDate archiveDate;
-	
+
 	// idle,inprogress,pending, completed.
 	private String eventStatus;
-	
+
 	// Registered, PreAdvise, Issue, Amendment, Adjustment, Payment
 	private String lcEvent;
-	
+
 	// Registered, Active, Inactive, archived, bookoff
 	private String lcStatus;
 
@@ -232,5 +237,21 @@ public class LcMaster extends AbstractPojo {
 	public void setRegister(Register register) {
 		this.register = register;
 	}
-	
+
+	public String getApplicantName() {
+		return applicantName;
+	}
+
+	public void setApplicantName(String applicantName) {
+		this.applicantName = applicantName;
+	}
+
+	public String getBeneficiaryName() {
+		return beneficiaryName;
+	}
+
+	public void setBeneficiaryName(String beneficiaryName) {
+		this.beneficiaryName = beneficiaryName;
+	}
+
 }

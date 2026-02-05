@@ -2,6 +2,9 @@ package com.more.app.base.ui.product;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +14,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.more.app.base.ui.BaseView;
 import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
+import com.more.app.entity.product.Party;
 import com.more.app.entity.product.Register;
 import com.more.app.repository.product.RegisterRepository;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 @Route(value = RegisterView.pageUrlString, layout = LeftAlignedLayout.class)
@@ -30,6 +39,10 @@ public class RegisterView extends BaseView<Register>
 
 	@Autowired
 	private RegisterRepository repository;
+	
+	private DatePicker fromRegDatePicker;
+	private DatePicker toRegDatePicker;
+	private TextField applicantnameTf;
 
 	public RegisterView()
 	{
@@ -51,6 +64,19 @@ public class RegisterView extends BaseView<Register>
 	@Override
 	public void loadComponents()
 	{
+		fromRegDatePicker = new DatePicker("From Registration Date");
+		fromRegDatePicker.setLocale(Locale.US);
+		fromRegDatePicker.setMax(LocalDate.now());
+		//fromRegDatePicker.setWidth("25%");
+		
+		toRegDatePicker = new DatePicker("To Registration Date");
+		toRegDatePicker.setLocale(Locale.US);
+		toRegDatePicker.setMax(LocalDate.now());
+		//toRegDatePicker.setWidth("25%");
+		
+		applicantnameTf = new TextField("Applicant");
+		
+		
 		grid.addColumn(Register :: getRegistrationDate).setHeader("Registration Date");
 		grid.addColumn(y -> (y.getTransactionReference() == null) ? y.getInternalReference() : y.getTransactionReference()).setHeader("Reference");
 		grid.addColumn(Register :: getProductType).setHeader("Product Type");
@@ -65,6 +91,25 @@ public class RegisterView extends BaseView<Register>
 		grid.addColumn(k -> k.getTransactionStatus().getStatus()).setHeader("Transaction Status");
 
 		addBaseComponentsandStyle();
+		
+		hlsearch.add(fromRegDatePicker, toRegDatePicker, applicantnameTf, searchb);
+		hlsearch.setVerticalComponentAlignment(Alignment.BASELINE, fromRegDatePicker, toRegDatePicker, applicantnameTf, searchb);
+		
+		searchb.addClickListener(e -> {
+			grid.setItems(new ArrayList<Register>());
+			LocalDate fromDate = fromRegDatePicker.getValue();
+			LocalDate toDate = toRegDatePicker.getValue();
+			
+			if(fromDate == null || toDate == null || fromDate.isAfter(toDate))
+			{
+				Notification.show("From /To Registration Date cannot be empty, From Registration Date must be before To Registration Date.", 500, Position.MIDDLE);
+				return;
+			}
+			
+			
+						
+		    grid.setItems(repository.findByRegistrationDateBetweenAndApplicantNameStartsWith(fromDate, toDate, applicantnameTf.getValue()));
+		});
 	}
 
 	public void reloadView()

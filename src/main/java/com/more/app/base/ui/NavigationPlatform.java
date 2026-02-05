@@ -8,7 +8,7 @@ import com.more.app.base.ui.configuration.ProductTypeEventView;
 import com.more.app.base.ui.configuration.ProductTypeView;
 import com.more.app.base.ui.product.LcIssueView;
 import com.more.app.base.ui.product.LcPreAdviceView;
-import com.more.app.base.ui.product.LcView;
+import com.more.app.base.ui.product.LcMasterView;
 import com.more.app.base.ui.product.MessagesView;
 import com.more.app.base.ui.product.OcpView;
 import com.more.app.base.ui.product.PartyView;
@@ -89,8 +89,8 @@ public class NavigationPlatform extends VerticalLayout {
 		SideNavItem productModuleSection = new SideNavItem("Product");
 		productModuleSection.addItem(new SideNavItem("Party", PartyView.class));
 		productModuleSection.addItem(new SideNavItem("Product Register", RegisterView.class));
+		productModuleSection.addItem(new SideNavItem("Letter of Credit", LcMasterView.class));
 		productModuleSection.addItem(new SideNavItem("Outward Payment", OcpView.class));
-		productModuleSection.addItem(new SideNavItem("Letter of Credit", LcView.class));
 		productModuleSection.addItem(new SideNavItem("Letter PreAdvise", LcPreAdviceView.class));
 		productModuleSection.addItem(new SideNavItem("Letter Issue", LcIssueView.class));
 		productModuleSection.setExpanded(true);

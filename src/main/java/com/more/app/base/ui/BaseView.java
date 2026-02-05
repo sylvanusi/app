@@ -54,7 +54,6 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		setHeight("100%");
 		setWidthFull();
 		
-
 		getStyle().set("overflow-y", "auto");
 		setSpacing(true);
 		setMargin(true);
@@ -204,8 +203,6 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		
 	}
 	
-	
-
 	public abstract void loadComponents();
 
 	public abstract void reloadView();
