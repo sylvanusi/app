@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public enum Status
 {
-	A("Active"), C("Complete"), I("Inactive"),P("Processing"),CN("Cancelled"),IP("In Progress");
+	A("Active"), C("Completed"), I("Inactive"),P("Processing"),CN("Cancelled"),IP("In Progress"),AP("Approved");
 	private final String status;
 
 	Status(String status)

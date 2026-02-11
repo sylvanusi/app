@@ -13,20 +13,34 @@ import jakarta.persistence.Transient;
 @Entity
 public class ProductEventChargeDefination extends AbstractPojo
 {
+	private static final long serialVersionUID = 1518632072861530128L;
+
+	@UIAction(label = "Product", errorlabel = "Product is mandatory")
+	@Transient
+	private Product product;
+	
 	@UIAction(label = "Product", errorlabel = "Product is mandatory")
 	@JoinColumn(nullable = false, referencedColumnName = "id")
 	@Auditable(enableAudit = true, fieldNo = 4)
-	private Product product;
+	private Product productId;
+	
+	@UIAction(label = "Event", errorlabel = "Event is mandatory")
+	@Transient
+	private ProductTypeEvent event;
 	
 	@UIAction(label = "Event", errorlabel = "Event is mandatory")
 	@JoinColumn(nullable = false, referencedColumnName = "id")
 	@Auditable(enableAudit = true, fieldNo = 5)
-	private ProductTypeEvent event;
+	private ProductTypeEvent eventId;
+	
+	@UIAction(label = "Charge", errorlabel = "Charge is mandatory")
+	@Transient
+	private ChargeDefination chargeDefination;
 	
 	@UIAction(label = "Charge", errorlabel = "Charge is mandatory")
 	@JoinColumn(nullable = false, referencedColumnName = "id")
 	@Auditable(enableAudit = true, fieldNo = 6)
-	private ChargeDefination chargeDefination;
+	private ChargeDefination chargeDefinationId;
 	
 	@UIAction(label = "Charge Name", errorlabel = "Charge Name is mandatory")
 	@Auditable(enableAudit = true, fieldNo = 10)
@@ -131,5 +145,29 @@ public class ProductEventChargeDefination extends AbstractPojo
 	public void setChargeCode(String chargeCode)
 	{
 		this.chargeCode = chargeCode;
+	}
+
+	public Product getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Product productId) {
+		this.productId = productId;
+	}
+
+	public ProductTypeEvent getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(ProductTypeEvent eventId) {
+		this.eventId = eventId;
+	}
+
+	public ChargeDefination getChargeDefinationId() {
+		return chargeDefinationId;
+	}
+
+	public void setChargeDefinationId(ChargeDefination chargeDefinationId) {
+		this.chargeDefinationId = chargeDefinationId;
 	}	
 }

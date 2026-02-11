@@ -102,7 +102,7 @@ public class AccountView extends BaseView<Account>
 		{
 			customer = null;
 			CustomerView cview = new CustomerView();
-			cview.remove(cview.getHl());
+			cview.getHl().setVisible(false);
 			Button selectItem = new Button("Select Item");
 			selectItem.setSizeFull();
 			selectItem.addClickListener(evt ->
@@ -125,7 +125,7 @@ public class AccountView extends BaseView<Account>
 		{
 			accountType = null;
 			AccountTypeView cview = new AccountTypeView();
-			cview.remove(cview.getHl());
+			cview.getHl().setVisible(false);
 			Button selectItem = new Button("Select Item");
 			selectItem.setSizeFull();
 			selectItem.addClickListener(evt ->

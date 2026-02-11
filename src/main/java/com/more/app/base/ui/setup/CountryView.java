@@ -17,7 +17,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
-@Component
+
 @Route(value = "countryView", layout = LeftAlignedLayout.class)
 public class CountryView extends BaseView<Country>
 {
@@ -43,6 +43,11 @@ public class CountryView extends BaseView<Country>
 	public CountryView(DialogSelectEntity dialog, Dialog dg)
 	{
 		super(dialog, dg);
+	}
+	public CountryView (Dialog dg, JpaRepository repository)
+	{
+		super(dg,repository);
+		this.countryRepository = (CountryRepository) repository;
 	}
 	
 

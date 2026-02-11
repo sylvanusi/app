@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.more.app.base.ui.BaseView;
 import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
 import com.more.app.entity.Product;
+import com.more.app.repository.CurrencyRepository;
 import com.more.app.repository.productsetup.ProductRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
@@ -37,6 +39,12 @@ public class ProductConfigurationView extends BaseView<Product>
 	public ProductConfigurationView(DialogSelectEntity dialog, Dialog dg)
 	{
 		super(dialog, dg);
+	}
+	
+	public <T> ProductConfigurationView(DialogSelectEntity dialog, Dialog dg, JpaRepository repository)
+	{
+		super(dialog, dg, repository);
+		this.repository = (ProductRepository) repository;
 	}
 
 	private TextField codeTF;
@@ -71,8 +79,6 @@ public class ProductConfigurationView extends BaseView<Product>
 			grid.setItems(repository.findByProductCodeStartsWith(code));
 		});
 		
-		if(dg != null)
-			grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
 	}
 
 	public void reloadView()
@@ -84,6 +90,10 @@ public class ProductConfigurationView extends BaseView<Product>
 	protected void onAttach(AttachEvent attachEvent)
 	{
 		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
+		
+
+		if(dg != null)
+			grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
 	}
 
 	@Override

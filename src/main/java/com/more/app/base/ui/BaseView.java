@@ -1,9 +1,9 @@
 package com.more.app.base.ui;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.more.app.entity.AbstractPojo;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,20 +15,24 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterListener;
 import com.vaadin.flow.router.RouterLayout;
 
+import jakarta.annotation.PostConstruct;
+
 public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
-		implements BeforeEnterListener, RouterLayout
-{
+		implements BeforeEnterListener, RouterLayout, DialogSelectEntity {
 	private static final long serialVersionUID = -4606100481847088963L;
 	private static final String PAGE_MODE_ADD = "ADD";
-	private static final String PAGE_MODE_EDIT = "EDIT";
+	protected static final String PAGE_MODE_EDIT = "EDIT";
 	private static final String PAGE_MODE_VIEW = "VIEW";
 	public Grid<T> grid = new Grid<T>();
 	protected HorizontalLayout hl = new HorizontalLayout();
 	protected HorizontalLayout hlsearch = new HorizontalLayout();
+	protected HorizontalLayout hlevent = new HorizontalLayout();
 	protected Button addb = new Button("Add", new Icon(VaadinIcon.PLUS_SQUARE_O));
 	protected Button editb = new Button("Edit", new Icon(VaadinIcon.EDIT));
 	protected Button viewb = new Button("View", new Icon(VaadinIcon.EYE));
@@ -40,47 +44,56 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 	protected boolean hasDialogue = false;
 	protected BaseView<T> view;
 	private JpaRepository<T, Long> repository;
-	
-	//protected JpaRepository<T> repository;
 
-	public BaseView()
-	{
+	public BaseView() {
 		this.view = this;
 		loadComponents();
 
-		setHeight("100%");
+		setHeightFull();
 		setWidthFull();
 
 		getStyle().set("overflow-y", "auto");
+		setSpacing(true);
+		setMargin(true);
 	}
 
-	public BaseView(DialogSelectEntity dialogSelectEntity, Dialog dg)
-	{
+	public BaseView(DialogSelectEntity dialogSelectEntity, Dialog dg) {
 		this.dialogSelectEntity = dialogSelectEntity;
 		this.dg = dg;
 		hasDialogue = true;
 		loadComponents();
+		setSpacing(true);
+		setMargin(true);
 	}
 	
-	public BaseView(DialogSelectEntity dialogSelectEntity, Dialog dg, JpaRepository<T, Long> repository)
-	{
+
+	public BaseView(Dialog dg) {
+		this.dg = dg;
+		hasDialogue = true;
+		loadComponents();
+		setSpacing(true);
+		setMargin(true);
+	}
+
+	public BaseView(DialogSelectEntity dialogSelectEntity, Dialog dg, JpaRepository<T, Long> repository) {
 		this.dialogSelectEntity = dialogSelectEntity;
 		this.dg = dg;
 		hasDialogue = true;
 		this.repository = repository;
 		loadComponents();
 	}
-	
-	public BaseView(Dialog dg,JpaRepository<T, Long> repository)
-	{
+
+	public BaseView(Dialog dg, JpaRepository<T, Long> repository) {
 		this.dg = dg;
 		this.repository = repository;
 		hasDialogue = true;
 		loadComponents();
+		setSpacing(true);
+		setMargin(true);
+		getElement().getStyle().set("background-color", "#ffffff");
 	}
 
-	public void addBaseComponentsandStyle()
-	{
+	public void addBaseComponentsandStyle() {
 		Icon close = new Icon(VaadinIcon.CLOSE_CIRCLE_O);
 		close.addClickListener(event -> {
 			if (hasDialogue)
@@ -97,19 +110,17 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		hlheader.setPadding(false);
 		hlheader.setMargin(false);
 		hlheader.setSpacing(true);
-		hlheader.add(title,close);
+		hlheader.add(title, close);
 		hlheader.setSizeFull();
 		hlheader.setFlexGrow(4, title);
 		Hr hr = new Hr();
 		hr.setSizeFull();
 		add(hlheader, hr);
-		
-		VerticalLayout innerVl = new VerticalLayout();
-		innerVl.getElement().getStyle().set("background-color", "white");
-		
-		  
-		  hr.getElement().getStyle().set("border-top", "1.0px solid #000000");
 
+		VerticalLayout innerVl = new VerticalLayout();
+		innerVl.getElement().getStyle().set("background-color", "#ffffff");
+
+		hr.getElement().getStyle().set("border-top", "1.0px solid #000000");
 
 		addb.getClassNames().add("searchbuttonadd");
 		editb.getClassNames().add("searchbuttonedit");
@@ -119,11 +130,10 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 
 		grid.addThemeVariants(GridVariant.AURA_COLUMN_BORDERS, GridVariant.LUMO_COMPACT);
 		grid.addThemeVariants(GridVariant.AURA_ROW_STRIPES);
-		//grid.getElement().getStyle().set("border", "0.5px bold #e6f5ff");
+		// grid.getElement().getStyle().set("border", "0.5px bold #e6f5ff");
 		grid.addClassName(PAGE_MODE_ADD);
 
-		//grid.getClassNames().add("appgrid");
-		
+		// grid.getClassNames().add("appgrid");
 
 		hlsearch.getElement().getStyle().set("border", "0.5px solid #e0b5b1");
 		hl.getElement().getStyle().set("border", "0.5px solid #e0b5b1");
@@ -155,34 +165,49 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 		if (!hasDialogue)
 			innerVl.add(hl);
 
+		innerVl.add(hlevent);
+
 		innerVl.add(grid);
 
-		
 		select.setWidth("300px");
 		select.setHeight("40px");
-		
+
 		HorizontalLayout dgFooter = new HorizontalLayout(select);
 		if (hasDialogue)
 			innerVl.add(dgFooter);
 
-		select.addClickListener(evt ->
-		{
-			if (!grid.getSelectedItems().isEmpty())
-			{
+		select.addClickListener(evt -> {
+			if (!grid.getSelectedItems().isEmpty()) {
 				Object[] arr = grid.getSelectedItems().toArray();
 				dialogSelectEntity.setSelectedEntity((T) arr[0]);
 				dg.close();
 			}
 		});
 
+		if (hl.getComponentCount() == 0)
+			hl.setVisible(false);
+
+		add(innerVl);
+
+		hl.getElement().getStyle().set("background-color", "#ffffff");
+		
+		hlevent.setVisible(false);
+
+		hlevent.getElement().getStyle().set("border", "0.5px solid #e0b5b1");
+
+		hlevent.getElement().getStyle().set("margin-top", "1em");
+		hlevent.getElement().getStyle().set("padding-top", "0.6em");
+		hlevent.getElement().getStyle().set("padding-right", "0.4em");
+		hlevent.getElement().getStyle().set("padding-bottom", "0.6em");
+		hlevent.getElement().getStyle().set("padding-left", "0.4em");
+	}
+
+	@PostConstruct
+	private void init() {
 		addb.addClickListener(evt -> navigationAction(PAGE_MODE_ADD));
 		editb.addClickListener(event -> navigationAction(PAGE_MODE_EDIT + "," + getSelectedItemId()));
 		viewb.addClickListener(event -> navigationAction(PAGE_MODE_VIEW + "," + getSelectedItemId()));
 
-		if (hl.getComponentCount() == 0)
-			remove(hl);
-		
-		add(innerVl);
 	}
 
 	public abstract void loadComponents();
@@ -199,31 +224,27 @@ public abstract class BaseView<T extends AbstractPojo> extends VerticalLayout
 
 	public abstract String getDialogTitle();
 
-	public HorizontalLayout getHl()
-	{
+	public HorizontalLayout getHl() {
 		return hl;
 	}
 
-	public void setHl(HorizontalLayout hl)
-	{
+	public void setHl(HorizontalLayout hl) {
 		this.hl = hl;
 	}
 
 	@Override
-	public void beforeEnter(BeforeEnterEvent event)
-	{
-		//if (null == CurrentUser.get())
-		//{
-		//	SessionHandler.setUser(null);
-		//	event.rerouteTo(LoginScreen.class);
-		//}
+	public void beforeEnter(BeforeEnterEvent event) {
+		reloadView();
 	}
 
-	private Long getSelectedItemId()
-	{
+	protected Long getSelectedItemId() {
 		if (grid.getSelectedItems().isEmpty())
 			return -1L;
 		Object[] arr = grid.getSelectedItems().toArray();
 		return ((AbstractPojo) arr[0]).getId();
+	}
+
+	@Override
+	public void setSelectedEntity(AbstractPojo pojo) {
 	}
 }

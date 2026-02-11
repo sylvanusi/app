@@ -32,6 +32,7 @@ import com.more.app.repository.CurrencyRepository;
 import com.more.app.repository.PermissionEntityRepository;
 import com.more.app.repository.UserRepository;
 import com.more.app.repository.productsetup.ProductModuleRepository;
+import com.more.app.repository.productsetup.ProductTypeEventPolicyRepository;
 import com.more.app.repository.productsetup.ProductTypeEventRepository;
 import com.more.app.repository.productsetup.ProductTypeRepository;
 import com.more.app.util.PasswordUtil;
@@ -62,6 +63,8 @@ public class InitialDataView extends BaseView<User> {
 	private ProductTypeEventRepository productTypeEventRepo;
 	@Autowired
 	private PermissionEntityRepository peRepo;
+	@Autowired 
+	private ProductTypeEventPolicyRepository policyRepo;
 	
 	
 	public InitialDataView() {
@@ -77,6 +80,8 @@ public class InitialDataView extends BaseView<User> {
 		Button loadProductType = new Button("Load Product Type");
 
 		Button loadProductTypeEvent = new Button("Load Product Type Event");
+
+		Button loadPolicy = new Button("Load Policy");
 
 		Button loadCSV = new Button("Load CSV");
 
@@ -232,8 +237,8 @@ public class InitialDataView extends BaseView<User> {
 			if (productTypeEventRepo.count() == 0)
 				productTypeEventRepo.saveAll(productTypeEventList);
 
-			ProductTypeEvent ocpRegEvt = productTypeEventRepo.findById(2160L).get();
-			ProductTypeEvent ilcRegEvt = productTypeEventRepo.findById(2157L).get();
+			ProductTypeEvent ocpRegEvt = productTypeEventRepo.findById(1L).get();
+			ProductTypeEvent ilcRegEvt = productTypeEventRepo.findById(4L).get();
 
 			Set<ProductTypeEventPolicy> registerPolicyList = new HashSet();
 			ProductTypeEventPolicy ocpRegisterCreatePolicy = new ProductTypeEventPolicy();
@@ -317,8 +322,153 @@ public class InitialDataView extends BaseView<User> {
 			registerPolicyList.add(ilcRegisterApprovalPolicy);
 			registerPolicyList.add(ilcRegisterCancelPolicy);
 
-			//if (FacadeFactory.getFacade().count(ProductTypeEventPolicy.class) == 0)
-				//FacadeFactory.getFacade().storeAll(registerPolicyList);
+			if (policyRepo.count() == 0)
+				policyRepo.saveAll(registerPolicyList);
+			Notification.show("Product Type Event Saved");
+		});
+		
+		loadProductType.addClickListener(event -> {
+			List<ProductModule> productModuleList = productModuleRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+			List<ProductType> productTypeList = new ArrayList<>();
+			ProductType ilcProductType = new ProductType();
+			ilcProductType.setCode("ILC");
+			ilcProductType.setProductType("Import Letter of Credit");
+			ilcProductType
+					.setModule(productModuleList.stream().filter(i -> i.getCode().endsWith("LC")).findFirst().get());
+			productTypeList.add(ilcProductType);
+
+			ProductType elcProductType = new ProductType();
+			elcProductType.setCode("ELC");
+			elcProductType.setProductType("Export Letter of Credit");
+			elcProductType
+					.setModule(productModuleList.stream().filter(i -> i.getCode().equals("LC")).findFirst().get());
+			productTypeList.add(elcProductType);
+
+			ProductType icProductType = new ProductType();
+			icProductType.setCode("ICP");
+			icProductType.setProductType("Inward Customer Payment");
+			icProductType.setModule(productModuleList.stream().filter(i -> i.getCode().equals("FT")).findFirst().get());
+			productTypeList.add(icProductType);
+
+			ProductType ocProductType = new ProductType();
+			ocProductType.setCode("OCP");
+			ocProductType.setProductType("Outward Customer Payment");
+			ocProductType.setModule(productModuleList.stream().filter(i -> i.getCode().equals("FT")).findFirst().get());
+			productTypeList.add(ocProductType);
+
+			ProductType ibProductType = new ProductType();
+			ibProductType.setCode("IBP");
+			ibProductType.setProductType("Inward Bank Payment");
+			ibProductType.setModule(productModuleList.stream().filter(i -> i.getCode().equals("FT")).findFirst().get());
+			productTypeList.add(ibProductType);
+
+			ProductType obProductType = new ProductType();
+			obProductType.setCode("OBP");
+			obProductType.setProductType("Outward Bank Payment");
+			obProductType.setModule(productModuleList.stream().filter(i -> i.getCode().equals("FT")).findFirst().get());
+			productTypeList.add(obProductType);
+
+			if (productTypeRepo.count() == 0)
+				productTypeRepo.saveAll(productTypeList);
+			Notification.show("Product Types Saved");
+		});
+
+		loadPolicy.addClickListener(event -> {
+			ProductTypeEvent ocpRegEvt = productTypeEventRepo.findById(1L).get();
+			ProductTypeEvent ilcRegEvt = productTypeEventRepo.findById(4L).get();
+
+			Set<ProductTypeEventPolicy> registerPolicyList = new HashSet();
+			ProductTypeEventPolicy ocpRegisterCreatePolicy = new ProductTypeEventPolicy();
+			ocpRegisterCreatePolicy.setEvent(ocpRegEvt);
+			ocpRegisterCreatePolicy.setEventId(ocpRegEvt.getId());
+			ocpRegisterCreatePolicy.setPolicyName("REGISTER CREATE POLICY");
+			ocpRegisterCreatePolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterCreatePolicy");
+			ocpRegisterCreatePolicy.setInputQueueType(true);
+			ocpRegisterCreatePolicy.setUpdateQueueType(false);
+			ocpRegisterCreatePolicy.setApprovalQueueType(false);
+			ocpRegisterCreatePolicy.setCancelQueueType(false);
+
+			ProductTypeEventPolicy ocpRegisterUpdatePolicy = new ProductTypeEventPolicy();
+			ocpRegisterUpdatePolicy.setEvent(ocpRegEvt);
+			ocpRegisterUpdatePolicy.setEventId(ocpRegEvt.getId());
+			ocpRegisterUpdatePolicy.setPolicyName("REGISTER UPDATE POLICY");
+			ocpRegisterUpdatePolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterUpdatePolicy");
+			ocpRegisterUpdatePolicy.setInputQueueType(false);
+			ocpRegisterUpdatePolicy.setUpdateQueueType(true);
+			ocpRegisterUpdatePolicy.setApprovalQueueType(false);
+			ocpRegisterUpdatePolicy.setCancelQueueType(false);
+
+			ProductTypeEventPolicy ocpRegisterApprovalPolicy = new ProductTypeEventPolicy();
+			ocpRegisterApprovalPolicy.setEvent(ocpRegEvt);
+			ocpRegisterApprovalPolicy.setEventId(ocpRegEvt.getId());
+			ocpRegisterApprovalPolicy.setPolicyName("REGISTER APPROVAL POLICY");
+			ocpRegisterApprovalPolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterApprovalPolicy");
+			ocpRegisterApprovalPolicy.setInputQueueType(false);
+			ocpRegisterApprovalPolicy.setUpdateQueueType(true);
+			ocpRegisterApprovalPolicy.setApprovalQueueType(true);
+			ocpRegisterApprovalPolicy.setCancelQueueType(false);
+
+			ProductTypeEventPolicy ocpRegisterCancelPolicy = new ProductTypeEventPolicy();
+			ocpRegisterCancelPolicy.setEvent(ocpRegEvt);
+			ocpRegisterCancelPolicy.setEventId(ocpRegEvt.getId());
+			ocpRegisterCancelPolicy.setPolicyName("REGISTER CANCELLATION POLICY");
+			ocpRegisterCancelPolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterCancellationPolicy");
+			ocpRegisterCancelPolicy.setInputQueueType(false);
+			ocpRegisterCancelPolicy.setUpdateQueueType(false);
+			ocpRegisterCancelPolicy.setApprovalQueueType(false);
+			ocpRegisterCancelPolicy.setCancelQueueType(true);
+
+			ProductTypeEventPolicy ilcRegisterCreatePolicy = new ProductTypeEventPolicy();
+			ilcRegisterCreatePolicy.setEvent(ilcRegEvt);
+			ilcRegisterCreatePolicy.setEventId(ilcRegEvt.getId());
+			ilcRegisterCreatePolicy.setPolicyName("REGISTER CREATE POLICY");
+			ilcRegisterCreatePolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterCreatePolicy");
+			ilcRegisterCreatePolicy.setInputQueueType(true);
+			ilcRegisterCreatePolicy.setUpdateQueueType(false);
+			ilcRegisterCreatePolicy.setApprovalQueueType(false);
+			ilcRegisterCreatePolicy.setCancelQueueType(false);
+
+			ProductTypeEventPolicy ilcRegisterUpdatePolicy = new ProductTypeEventPolicy();
+			ilcRegisterUpdatePolicy.setEvent(ilcRegEvt);
+			ilcRegisterUpdatePolicy.setEventId(ilcRegEvt.getId());
+			ilcRegisterUpdatePolicy.setPolicyName("REGISTER UPDATE POLICY");
+			ilcRegisterUpdatePolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterUpdatePolicy");
+			ilcRegisterUpdatePolicy.setInputQueueType(false);
+			ilcRegisterUpdatePolicy.setUpdateQueueType(true);
+			ilcRegisterUpdatePolicy.setApprovalQueueType(false);
+			ilcRegisterUpdatePolicy.setCancelQueueType(false);
+
+			ProductTypeEventPolicy ilcRegisterApprovalPolicy = new ProductTypeEventPolicy();
+			ilcRegisterApprovalPolicy.setEvent(ilcRegEvt);
+			ilcRegisterApprovalPolicy.setEventId(ilcRegEvt.getId());
+			ilcRegisterApprovalPolicy.setPolicyName("REGISTER APPROVAL POLICY");
+			ilcRegisterApprovalPolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterApprovalPolicy");
+			ilcRegisterApprovalPolicy.setInputQueueType(false);
+			ilcRegisterApprovalPolicy.setUpdateQueueType(true);
+			ilcRegisterApprovalPolicy.setApprovalQueueType(true);
+			ilcRegisterApprovalPolicy.setCancelQueueType(false);
+
+			ProductTypeEventPolicy ilcRegisterCancelPolicy = new ProductTypeEventPolicy();
+			ilcRegisterCancelPolicy.setEvent(ilcRegEvt);
+			ilcRegisterCancelPolicy.setEventId(ilcRegEvt.getId());
+			ilcRegisterCancelPolicy.setPolicyName("REGISTER CANCELLATION POLICY");
+			ilcRegisterCancelPolicy.setPolicyClass("com.princeps.app.backend.policy.RegisterCancellationPolicy");
+			ilcRegisterCancelPolicy.setInputQueueType(false);
+			ilcRegisterCancelPolicy.setUpdateQueueType(false);
+			ilcRegisterCancelPolicy.setApprovalQueueType(false);
+			ilcRegisterCancelPolicy.setCancelQueueType(true);
+
+			registerPolicyList.add(ocpRegisterCreatePolicy);
+			registerPolicyList.add(ocpRegisterUpdatePolicy);
+			registerPolicyList.add(ocpRegisterApprovalPolicy);
+			registerPolicyList.add(ocpRegisterCancelPolicy);
+			registerPolicyList.add(ilcRegisterCreatePolicy);
+			registerPolicyList.add(ilcRegisterUpdatePolicy);
+			registerPolicyList.add(ilcRegisterApprovalPolicy);
+			registerPolicyList.add(ilcRegisterCancelPolicy);
+
+			if (policyRepo.count() == 0)
+				policyRepo.saveAll(registerPolicyList);
 			Notification.show("Product Type Event Saved");
 		});
 
@@ -336,7 +486,7 @@ public class InitialDataView extends BaseView<User> {
 			}
 		});
 
-		add(loadConfigData, loadProductModule, loadProductType, loadProductTypeEvent, loadCSV);
+		add(loadConfigData, loadProductModule, loadProductType, loadProductTypeEvent,loadPolicy, loadCSV);
 	}
 
 	@Override

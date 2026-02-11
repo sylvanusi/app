@@ -37,3 +37,16 @@ vaadin-grid::part(selected-row){
 vaadin-grid::part(header-cell){
 	background: #e0b5b1;
 }
+
+[required] label {
+    color: red; /* Or any color like red */
+}
+
+/* Specific to input components like TextField
+vaadin-text-field[required] [part="label"] {
+    color: red;
+}*/
+
+html {
+  --vaadin-input-field-required-indicator-color: #ff0000; /* Replace #ff0000 with your desired color */
+}

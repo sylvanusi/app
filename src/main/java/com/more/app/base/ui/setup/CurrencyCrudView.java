@@ -38,7 +38,6 @@ public class CurrencyCrudView extends BaseCrudComponent<Currency> implements Has
 
 	public CurrencyCrudView() {
 		super();
-
 		Button getCountry = new Button("Get Country", new Icon(VaadinIcon.FLAG_CHECKERED), event -> {
 			Dialog dg = new Dialog();
 			CountryView cv = new CountryView(ui, dg, countryrepo);
@@ -167,6 +166,8 @@ public class CurrencyCrudView extends BaseCrudComponent<Currency> implements Has
 
 	@Override
 	public void setParameter(BeforeEvent beforeEvent, String parameter) {
+
+		System.out.println("CALLED B");
 		if (parameter != null && !parameter.isEmpty()) {
 			String params[] = parameter.split(",");
 			pageMode = params[0];

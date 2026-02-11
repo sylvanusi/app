@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.more.app.base.ui.BaseView;
 import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.LeftAlignedLayout;
 import com.more.app.entity.SwiftBic;
 import com.more.app.repository.SwiftBicRepository;
+import com.more.app.repository.product.PartyRepository;
 import com.more.app.util.annotations.UIActionUtil;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -44,6 +46,12 @@ public class SwiftBicView extends BaseView<SwiftBic>
 	public SwiftBicView(DialogSelectEntity dialog, Dialog dg)
 	{
 		super(dialog, dg);
+	}
+	
+	public <T> SwiftBicView(DialogSelectEntity dialog, Dialog dg, JpaRepository repository)
+	{
+		super(dialog, dg, repository);
+		this.repository = (SwiftBicRepository) repository;
 	}
 
 	public void loadComponents()

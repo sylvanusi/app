@@ -1,21 +1,32 @@
 package com.more.app.entity.product;
 
 import com.more.app.entity.AbstractPojo;
+import com.more.app.entity.Account;
+import com.more.app.entity.Country;
+import com.more.app.entity.SwiftBic;
 import com.more.app.util.annotations.UIAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Party extends AbstractPojo
 {	
+	// account name address1 address2 address3
 	@Column(length=34)
 	@UIAction(label="Account No")
 	private String account;
 	
+	@Transient
+	private Account accountEntity;
+	
 	@Column(length=34)
 	@UIAction(label="BIC Code")
 	private String bicCode;
+	
+	@Transient
+	private SwiftBic bicEntity;
 	
 	@Column(length=34)
 	@UIAction(label="Name")
@@ -44,6 +55,9 @@ public class Party extends AbstractPojo
 	@Column(length=2)
 	@UIAction(label="Country Code")
 	private String identifierCountryCode;
+	
+	@Transient
+	private Country countryEntity;
 	
 	@Column(length=28)
 	@UIAction(label="Identifier")
@@ -270,7 +284,47 @@ public class Party extends AbstractPojo
 	{
 		this.swiftPartyType = swiftPartyType;
 	}
+
+
+	public Account getAccountEntity() {
+		return accountEntity;
+	}
+
+
+	public void setAccountEntity(Account accountEntity) {
+		this.accountEntity = accountEntity;
+	}
+
+
+	public SwiftBic getBicEntity() {
+		return bicEntity;
+	}
+
+
+	public void setBicEntity(SwiftBic bicEntity) {
+		this.bicEntity = bicEntity;
+	}
+
+
+	public Country getCountryEntity() {
+		return countryEntity;
+	}
+
+
+	public void setCountryEntity(Country countryEntity) {
+		this.countryEntity = countryEntity;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Party [account=" + account + ", accountEntity=" + accountEntity + ", bicCode=" + bicCode
+				+ ", bicEntity=" + bicEntity + ", name=" + name + ", address1=" + address1 + ", address2=" + address2
+				+ ", address3=" + address3 + ", location=" + location + ", identifierCode=" + identifierCode
+				+ ", identifierCountryCode=" + identifierCountryCode + ", countryEntity=" + countryEntity
+				+ ", identifier=" + identifier + ", swiftPartyType=" + swiftPartyType + ", id=" + id + ", auditUser="
+				+ auditUser + ", auditTimestamp=" + auditTimestamp + "]";
+	}
 	
-	// swiftPartyType, account, bicCode, name, address1, address2, address3, location
 	
 }

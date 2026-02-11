@@ -3,6 +3,8 @@ package com.more.app.base.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tinylog.Logger;
+
 import com.more.app.entity.AbstractPojo;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -28,11 +30,15 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 	protected String pageMode = "";
 	protected Binder<T> binder;
 	protected VerticalLayout errorVl = new VerticalLayout();
-	protected VerticalLayout vl = new VerticalLayout();
+	public VerticalLayout vl = new VerticalLayout();
 	protected BaseCrudComponent<T> ui;
 	protected H4 title = new H4();
 	private Div body = new Div();
 	public Button confirmButton, addewButton, closeButton;
+	public Hr hr1 = new Hr();
+	public HorizontalLayout hl = new HorizontalLayout();
+	public HorizontalLayout hlheader = new HorizontalLayout();
+	public boolean fromDialogue = false;
 
 	@SuppressWarnings("unchecked")
 	public BaseCrudComponent() {
@@ -40,7 +46,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 		this.entity = getEntity();
 		this.pageMode = getPageMode();
 		this.binder = getBinder();
-
+	
 		initializeComponents();
 
 		Notification n = new Notification();
@@ -48,6 +54,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		confirmButton = new Button("Save Record", new Icon(VaadinIcon.CHECK_SQUARE_O), event -> {
 			try {
+				
 				errorVl.removeAll();
 				ui.vl.remove(errorVl);
 
@@ -55,6 +62,8 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 				getBinder().validate();
 				List<String> erString = new ArrayList();
 				if (erString.isEmpty() && getBinder().validate().isOk()) {
+					Logger.info("From Dialogue " + fromDialogue);
+					Logger.info("About to save, binder is valid");
 					if (ui.getPageMode().equals("ADDNEW"))
 						entity.setId(null);
 					setEventEntityFields(entity);
@@ -63,7 +72,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 						return;
 					}
 
-					System.out.println(entity.toString());
+					Logger.info(entity.toString());
 
 					// entity.setAuditUser(CurrentUser.get());
 					// FacadeFactory.getFacade().store(entity);
@@ -79,7 +88,8 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 					updateFieldsOnSave();
 					ui.setPageMode("EDIT");
 					getBinder().setBean(entity);
-				} else {
+				} 			
+				else {
 					String caption = "";
 					for (int i = 0; i < erString.size(); i++) {
 						H1 errorLabel = new H1("");
@@ -89,7 +99,22 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 						ui.vl.addComponentAtIndex(0, errorVl);
 					}
 				}
-
+				
+				if(fromDialogue)
+				{
+					Logger.info("From Dialogue " + fromDialogue);	
+					Logger.info(entity.toString());
+					saveRecord(entity);
+					n.removeAll();
+					Div content = new Div();
+					// content.getClassNames().add("savenofication");
+					content.setText("Record Saved");
+					n.add(content);
+					n.setDuration(5000);
+					n.setPosition(Position.TOP_CENTER);
+					n.open();
+				}
+				
 			} catch (OptimisticLockException e) {
 				// FacadeFactory.getFacade().refresh(entity);
 			} catch (Exception e) {
@@ -110,11 +135,11 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		closeButton = new Button("Close", new Icon(VaadinIcon.CLOSE_CIRCLE_O));
 		closeButton.addClickListener(event -> {
-			//removeAll();
+			removeAll();
 			getUI().get().navigate((Class<? extends Component>) getCloseNavigationClass());
 		});
 
-		HorizontalLayout hl = new HorizontalLayout();
+		
 		hl.setPadding(true);
 		// hl.setSizeFull();
 		hl.setSpacing(true);
@@ -127,7 +152,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		title.getElement().getStyle().set("font-weight", "bold");
 
-		HorizontalLayout hlheader = new HorizontalLayout();
+		
 		hlheader.setPadding(false);
 		hlheader.setMargin(false);
 		hlheader.setSpacing(true);
@@ -154,7 +179,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		add(body);
 
-		Hr hr1 = new Hr();
+		
 		hr1.setWidthFull();
 		hr1.getElement().getStyle().set("border-top", "1.0px solid #000000");
 		add(hr1);
@@ -173,15 +198,17 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		closeButton.getElement().getStyle().set("color", "black");
 		closeButton.getElement().getStyle().set("border", "0.2px solid #000000");
-		closeButton.getElement().getStyle().set("background-color", "white");
+		closeButton.getElement().getStyle().set("background-color", "#FFFDD0");
 
 		setHeight("100%");
 		setWidthFull();
 		getStyle().set("overflow-y", "auto");
 
 		setPadding(false);
-		setMargin(false);
-		setSpacing(false);
+		setMargin(true);
+		setSpacing(true);
+		//hl.getElement().getStyle().set("background-color", "#fffff0");
+		//getElement().getStyle().set("background-color", "#CFCFCF");
 	}
 
 	public abstract Class<?> getCloseNavigationClass();
@@ -230,4 +257,14 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 	}
 
 	public abstract void saveRecord(T entity);
+
+
+	public boolean isFromDialogue() {
+		return fromDialogue;
+	}
+
+	public void setFromDialogue(boolean fromDialogue) {
+		this.fromDialogue = fromDialogue;
+	}
+	
 }

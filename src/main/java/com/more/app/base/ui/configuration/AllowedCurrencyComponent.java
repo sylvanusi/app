@@ -3,9 +3,6 @@ package com.more.app.base.ui.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.more.app.base.ui.DialogSelectEntity;
 import com.more.app.base.ui.setup.CurrencyView;
 import com.more.app.entity.AbstractPojo;
@@ -15,42 +12,33 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H5;
-import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-@Component
 public class AllowedCurrencyComponent extends VerticalLayout 
 {
 	private static final long serialVersionUID = 1L;
 	private List<AllowedCurrencyItem> fieldList = new ArrayList<>();
 	private H5 titlelabel = new H5("Allowed Currency");
-	private Hr hr = new Hr();
 	private Button addbtn = new Button("+ Add");
 	private Div itemsDiv = new Div();
-	
-	
-	private CurrencyRepository ccyRepo;
+	private CurrencyRepository currencyRepo;
 
-	@Autowired 
-	public AllowedCurrencyComponent(CurrencyRepository ccyRepo) {
-		this.ccyRepo = ccyRepo;
-		
+	public AllowedCurrencyComponent(CurrencyRepository currencyRepo) {
+		this.currencyRepo = currencyRepo;
 		titlelabel.getElement().getStyle().set("font-weight", "bold");
-		hr.setSizeFull();
 
-		add(titlelabel, hr, itemsDiv, addbtn);
-		
-		
+		add(titlelabel, itemsDiv, addbtn);
 
 		addbtn.addClickListener(event ->
 		{
 			addButtonAction("");
 		});
 
+		setSpacing(true);
 		setMargin(true);
 		setPadding(true);
 		setWidthFull();
@@ -102,8 +90,6 @@ public class AllowedCurrencyComponent extends VerticalLayout
 		public AllowedCurrencyItem(String ccy) 
 		{
 			this.field = this;
-			this.setSpacing(true);
-			this.setMargin(true);
 			fieldList.add(field);
 			currencyTF = new TextField();
 			currencyTF.setMaxLength(50);
@@ -118,11 +104,14 @@ public class AllowedCurrencyComponent extends VerticalLayout
 			itemsDiv.add(field);
 			removeBtn.addClickListener(event -> removeButtonAction());
 
+			setMargin(true);
+			setSpacing(true);
 		}
 
 		Button getCurrency = new Button("Get Currency", new Icon(VaadinIcon.SEARCH), event -> {
 			Dialog dg = new Dialog();
-			CurrencyView cv = new CurrencyView(field, dg, ccyRepo);
+			
+			CurrencyView cv = new CurrencyView(field, dg, getCurrencyRepo());
 			dg.add(cv);
 			dg.open();
 		});
@@ -150,4 +139,15 @@ public class AllowedCurrencyComponent extends VerticalLayout
 		}
 
 	}
+
+	public CurrencyRepository getCurrencyRepo() {
+		return currencyRepo;
+	}
+
+	public void setCurrencyRepo(CurrencyRepository currencyRepo) {
+		this.currencyRepo = currencyRepo;
+	}
+	
+	
+	
 }

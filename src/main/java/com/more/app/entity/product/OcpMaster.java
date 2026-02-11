@@ -1,6 +1,5 @@
 package com.more.app.entity.product;
 
-public class WorkFlowQueue
-{
+public class OcpMaster {
 
 }

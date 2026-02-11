@@ -59,7 +59,7 @@ public class Customer extends AbstractPojo {
 	private String accountOfficerName;
 
 	@UIAction(label = "Customer Type", errorlabel = "Customer Type is mandatory")
-	@Column(nullable = false, length = 10)
+	@Column(nullable = false, length = 12)
 	private String customerType;
 
 	@UIAction(label = "Correspondent Bank")
