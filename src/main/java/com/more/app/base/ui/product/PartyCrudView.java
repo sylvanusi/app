@@ -1,6 +1,7 @@
 package com.more.app.base.ui.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.more.app.base.ui.BaseCrudComponent;
 import com.more.app.base.ui.CrudPageView;
@@ -24,7 +25,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -34,6 +34,7 @@ import com.vaadin.flow.router.Route;
 
 import ch.carnet.kasparscherrer.EmptyFormLayoutItem;
 
+@Component
 @Route(value = PartyCrudView.pageUrlString, layout = CrudPageView.class)
 public class PartyCrudView extends BaseCrudComponent<Party> implements HasUrlParameter<String> {
 	public static final String pageUrlString = "party-crud";
@@ -123,7 +124,7 @@ public class PartyCrudView extends BaseCrudComponent<Party> implements HasUrlPar
 		identifierCountryCode.setMaxWidth(30, Unit.PERCENTAGE);
 		identifier.setMaxLength(34);
 
-		swiftPartyType.setItems("","A", "F", "K");
+		swiftPartyType.setItems("","A","B","D", "F", "K");
 		swiftPartyType.setMaxWidth(50, Unit.PERCENTAGE);
 		
 		hlCountry = new HorizontalLayout(); 
@@ -143,23 +144,23 @@ public class PartyCrudView extends BaseCrudComponent<Party> implements HasUrlPar
 			}
 		});
 
-		binder.forField(swiftPartyType).withValidator(party -> {
+		//binder.forField(swiftPartyType).withValidator(party -> {
 
 
-			if ("A".equals(party)) {
-				return binder.getBean().getBicCode() != null;
-			}
+		//	if ("A".equals(party)) {
+		//		return binder.getBean().getBicCode() != null;
+		//	}
 
-			if ("F".equals(party)) {
-				return binder.getBean().getName() != null && binder.getBean().getAddress1() != null;
-			}
+		//	if ("F".equals(party)) {
+		//		return binder.getBean().getName() != null && binder.getBean().getAddress1() != null;
+		//	}
 
-			return true;
+		//	return true;
 
-		}, "Party Option validation failed").bind(Party::getSwiftPartyType, Party::setSwiftPartyType);
+		//}, "Party Option validation failed").bind(Party::getSwiftPartyType, Party::setSwiftPartyType);
 
 		binder.forField(account).bind(Party::getAccount, Party::setAccount);
-		//binder.forField(swiftPartyType).bind(Party::getSwiftPartyType, Party::setSwiftPartyType);
+		binder.forField(swiftPartyType).bind(Party::getSwiftPartyType, Party::setSwiftPartyType);
 
 		binder.forField(bicCode).withValidator(SwiftValidator::bic, "Invalid BIC").bind(Party::getBicCode,
 				Party::setBicCode);
@@ -273,6 +274,12 @@ public class PartyCrudView extends BaseCrudComponent<Party> implements HasUrlPar
 	public Binder<Party> getBinder() {
 		return binder;
 	}
+	
+	
+
+	public void setBinder(Binder<Party> binder) {
+		this.binder = binder;
+	}
 
 	@Override
 	public Party getEntity() {
@@ -281,7 +288,8 @@ public class PartyCrudView extends BaseCrudComponent<Party> implements HasUrlPar
 
 	@Override
 	public void saveRecord(Party entity) {
-		repository.save(entity);
+		entity = repository.save(entity);
+		setEntity(entity);
 	}
 
 	@Override
@@ -292,6 +300,11 @@ public class PartyCrudView extends BaseCrudComponent<Party> implements HasUrlPar
 				confirmButton.setVisible(true);
 				addewButton.setVisible(true);
 			}
+		}
+		else
+		{
+			Party party = new Party();
+			binder.setBean(party);
 		}
 	}
 

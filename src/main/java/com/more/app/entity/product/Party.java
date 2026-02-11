@@ -314,6 +314,17 @@ public class Party extends AbstractPojo
 	public void setCountryEntity(Country countryEntity) {
 		this.countryEntity = countryEntity;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Party [account=" + account + ", accountEntity=" + accountEntity + ", bicCode=" + bicCode
+				+ ", bicEntity=" + bicEntity + ", name=" + name + ", address1=" + address1 + ", address2=" + address2
+				+ ", address3=" + address3 + ", location=" + location + ", identifierCode=" + identifierCode
+				+ ", identifierCountryCode=" + identifierCountryCode + ", countryEntity=" + countryEntity
+				+ ", identifier=" + identifier + ", swiftPartyType=" + swiftPartyType + ", id=" + id + ", auditUser="
+				+ auditUser + ", auditTimestamp=" + auditTimestamp + "]";
+	}
 	
 	
 }

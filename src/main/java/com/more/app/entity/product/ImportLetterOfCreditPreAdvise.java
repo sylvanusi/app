@@ -8,13 +8,10 @@ import org.hibernate.annotations.Formula;
 import com.more.app.entity.AbstractPojo;
 import com.more.app.util.annotations.UIAction;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -22,7 +19,11 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long lcMasterId;
+	private Long lcMasterId;	
+	@Transient
+	private Register register;
+	@Transient
+	private LcMaster lcMaster;
 
 	@Column(length = 11)
 	@UIAction(label = "Sender BIC")
@@ -49,9 +50,9 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	@Column(length = 29)
 	@UIAction(label = "Place of Expiry")
 	private String placeOfExpiry;
+	
 
 	// swift field 50 component
-	@OneToOne(targetEntity = Party.class)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Applicant")
 	private Long applicantPartyId;
@@ -65,7 +66,6 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	private Party applicant;
 
 	// swift field 59 components
-	@OneToOne(targetEntity = Party.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Beneficiary")
 	private Long beneficiaryPartyId;
@@ -76,6 +76,23 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 
 	@Transient
 	private Party beneficiary;
+	
+	@Column(length = 11)
+	private String advisingBankBicCode;
+	
+	@JoinColumn(referencedColumnName = "id")
+	@UIAction(label = "Beneficiary")
+	private Long advisingBankPartyId;
+	
+	@UIAction(label = "Beneficiary")
+	@Formula("(select a.name from Party a where a.id = advising_Bank_Party_Id)")
+	private String advisingBankName;
+	
+	@Transient
+	private Party advisingBank;
+	
+	@Column(length = 2)
+	private String beneficiaryCountry;
 
 	// swift field 32B components
 	@Column(length = 3)
@@ -89,42 +106,53 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	// swift field 39A components
 	@Column(precision = 2, scale = 0)
 	@UIAction(label = "Tolerance (+)")
-	private int tolerance1;
+	private Double tolerancePlus;
 
 	@Column(precision = 2, scale = 0)
 	@UIAction(label = "Tolerance (-)")
-	private int tolerance2;
+	private Double toleranceMinus;
 
 	// swift field 39C component
 	@Column(length = 140)
 	@UIAction(label = "Additional Amounts Covered")
 	private String additionalAmountsCovered;
 
-	// swift field 41A component :BIC
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(referencedColumnName = "id")
-	@UIAction(label = "Available With ... By ...")
-	private Party availableWithBy;
+	@Column(length = 14)
+	private String availableWithByCode;
+	@Column(length = 11)
+	private String availableWithByBic;
+	@Column(length = 35)
+	private String availableWithByName;
+	@Column(length = 35)
+	private String availableWithByAddress1;
+	@Column(length = 35)
+	private String availableWithByAddress2;
+	@Column(length = 35)
+	private String availableWithByAddress3;
+	
+	// availableWithByCode, availableWithByBic, availableWithByName, availableWithByAddress1, availableWithByAddress2, availableWithByAddress3
 
 	// swift field 44A component
-	@Column(length = 65)
+	@Column(length = 140)
 	@UIAction(label = "Dispatch From")
 	private String dispatchFrom;
 
 	// swift field 44E component
-	@Column(length = 65)
+	@Column(length = 140)
 	@UIAction(label = "Port of Loading")
 	private String portOfLoading;
 
 	// swift field 44F component
-	@Column(length = 65)
+	@Column(length = 140)
 	@UIAction(label = "Port of Discharge")
 	private String portOfDischarge;
 
 	// swift field 44B component
-	@Column(length = 65)
+	@Column(length = 140)
 	@UIAction(label = "Final Destination")
 	private String placeOfFinalDestination;
+	
+	// dispatchFrom, portOfLoading, portOfDischarge, placeOfFinalDestination
 
 	// swift field 44C component
 	@UIAction(label = "Latest Shipment Date")
@@ -140,13 +168,26 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	@Lob
 	@Column(nullable = true)
 	@UIAction(label = "Goods Description")
-	private String goodDesription;
+	private String goodsDescription;
+	
+	//shipmentPeriod, goodDesription, narrative, senderToReceiverInfo
 
 	// swift field 57a component
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Advise Through Bank")
-	private Party advThrBankParty;
+	private Long advThrBankPartyId;
+	
+	@UIAction(label = "Beneficiary")
+	@Formula("(select a.name from Party a where a.id = adv_Thr_Bank_Party_Id)")
+	private String advThrBankName;
+	
+	@UIAction(label = "Beneficiary")
+	@Formula("(select a.bic_Code from Party a where a.id = adv_Thr_Bank_Party_Id)")
+	private String advThrBankBic;
+	
+	@UIAction(label = "Beneficiary")
+	@Formula("(select a.account from Party a where a.id = adv_Thr_Bank_Party_Id)")
+	private String advThrBankAccountNo;
 
 	// swift field 79Z component
 	@Lob
@@ -219,15 +260,15 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	/**
 	 * @return the tolerance1
 	 */
-	public int getTolerance1() {
-		return tolerance1;
+	public Double getTolerancePlus() {
+		return tolerancePlus;
 	}
 
 	/**
 	 * @return the tolerance2
 	 */
-	public int getTolerance2() {
-		return tolerance2;
+	public Double getToleranceMinus() {
+		return toleranceMinus;
 	}
 
 	/**
@@ -237,12 +278,7 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 		return additionalAmountsCovered;
 	}
 
-	/**
-	 * @return the availableWithBy
-	 */
-	public Party getAvailableWithBy() {
-		return availableWithBy;
-	}
+	
 
 	/**
 	 * @return the dispatchFrom
@@ -289,15 +325,15 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	/**
 	 * @return the goodDesription
 	 */
-	public String getGoodDesription() {
-		return goodDesription;
+	public String getGoodsDescription() {
+		return goodsDescription;
 	}
 
 	/**
 	 * @return the advThrBankParty
 	 */
-	public Party getAdvThrBankParty() {
-		return advThrBankParty;
+	public Long getAdvThrBankPartyId() {
+		return advThrBankPartyId;
 	}
 
 	/**
@@ -373,15 +409,15 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	/**
 	 * @param tolerance1 the tolerance1 to set
 	 */
-	public void setTolerance1(int tolerance1) {
-		this.tolerance1 = tolerance1;
+	public void setTolerancePlus(Double tolerancePlus) {
+		this.tolerancePlus = tolerancePlus;
 	}
 
 	/**
 	 * @param tolerance2 the tolerance2 to set
 	 */
-	public void setTolerance2(int tolerance2) {
-		this.tolerance2 = tolerance2;
+	public void setToleranceMinus(Double toleranceMinus) {
+		this.toleranceMinus = toleranceMinus;
 	}
 
 	/**
@@ -391,12 +427,7 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 		this.additionalAmountsCovered = additionalAmountsCovered;
 	}
 
-	/**
-	 * @param availableWithBy the availableWithBy to set
-	 */
-	public void setAvailableWithBy(Party availableWithBy) {
-		this.availableWithBy = availableWithBy;
-	}
+	
 
 	/**
 	 * @param dispatchFrom the dispatchFrom to set
@@ -443,15 +474,15 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	/**
 	 * @param goodDesription the goodDesription to set
 	 */
-	public void setGoodDesription(String goodDesription) {
-		this.goodDesription = goodDesription;
+	public void setGoodsDescription(String goodsDescription) {
+		this.goodsDescription = goodsDescription;
 	}
 
 	/**
 	 * @param advThrBankParty the advThrBankParty to set
 	 */
-	public void setAdvThrBankParty(Party advThrBankParty) {
-		this.advThrBankParty = advThrBankParty;
+	public void setAdvThrBankParty(Long advThrBankPartyId) {
+		this.advThrBankPartyId = advThrBankPartyId;
 	}
 
 	/**
@@ -524,4 +555,139 @@ public class ImportLetterOfCreditPreAdvise extends AbstractPojo {
 	public void setBeneficiaryName(String beneficiaryName) {
 		this.beneficiaryName = beneficiaryName;
 	}
+
+	public String getAdvThrBankName() {
+		return advThrBankName;
+	}
+
+	public void setAdvThrBankName(String advThrBankName) {
+		this.advThrBankName = advThrBankName;
+	}
+
+	public String getAdvThrBankBic() {
+		return advThrBankBic;
+	}
+
+	public void setAdvThrBankBic(String advThrBankBic) {
+		this.advThrBankBic = advThrBankBic;
+	}
+
+	public String getAdvThrBankAccountNo() {
+		return advThrBankAccountNo;
+	}
+
+	public void setAdvThrBankAccountNo(String advThrBankAccountNo) {
+		this.advThrBankAccountNo = advThrBankAccountNo;
+	}
+
+	public void setAdvThrBankPartyId(Long advThrBankPartyId) {
+		this.advThrBankPartyId = advThrBankPartyId;
+	}
+
+	public String getAvailableWithByCode() {
+		return availableWithByCode;
+	}
+
+	public void setAvailableWithByCode(String availableWithByCode) {
+		this.availableWithByCode = availableWithByCode;
+	}
+
+	public String getAvailableWithByBic() {
+		return availableWithByBic;
+	}
+
+	public void setAvailableWithByBic(String availableWithByBic) {
+		this.availableWithByBic = availableWithByBic;
+	}
+
+	public String getAvailableWithByName() {
+		return availableWithByName;
+	}
+
+	public void setAvailableWithByName(String availableWithByName) {
+		this.availableWithByName = availableWithByName;
+	}
+
+	public String getAvailableWithByAddress1() {
+		return availableWithByAddress1;
+	}
+
+	public void setAvailableWithByAddress1(String availableWithByAddress1) {
+		this.availableWithByAddress1 = availableWithByAddress1;
+	}
+
+	public String getAvailableWithByAddress2() {
+		return availableWithByAddress2;
+	}
+
+	public void setAvailableWithByAddress2(String availableWithByAddress2) {
+		this.availableWithByAddress2 = availableWithByAddress2;
+	}
+
+	public String getAvailableWithByAddress3() {
+		return availableWithByAddress3;
+	}
+
+	public void setAvailableWithByAddress3(String availableWithByAddress3) {
+		this.availableWithByAddress3 = availableWithByAddress3;
+	}
+
+	public Register getRegister() {
+		return register;
+	}
+
+	public void setRegister(Register register) {
+		this.register = register;
+	}
+
+	public LcMaster getLcMaster() {
+		return lcMaster;
+	}
+
+	public void setLcMaster(LcMaster lcMaster) {
+		this.lcMaster = lcMaster;
+	}
+
+	public Long getAdvisingBankPartyId() {
+		return advisingBankPartyId;
+	}
+
+	public void setAdvisingBankPartyId(Long advisingBankPartyId) {
+		this.advisingBankPartyId = advisingBankPartyId;
+	}
+
+	public String getAdvisingBankName() {
+		return advisingBankName;
+	}
+
+	public void setAdvisingBankName(String advisingBankName) {
+		this.advisingBankName = advisingBankName;
+	}
+
+	public Party getAdvisingBank() {
+		return advisingBank;
+	}
+
+	public void setAdvisingBank(Party advisingBank) {
+		this.advisingBank = advisingBank;
+	}
+
+	public String getBeneficiaryCountry() {
+		return beneficiaryCountry;
+	}
+
+	public void setBeneficiaryCountry(String beneficiaryCountry) {
+		this.beneficiaryCountry = beneficiaryCountry;
+	}
+
+	public String getAdvisingBankBicCode() {
+		return advisingBankBicCode;
+	}
+
+	public void setAdvisingBankBicCode(String advisingBankBicCode) {
+		this.advisingBankBicCode = advisingBankBicCode;
+	}
+	
+	
+	
 }

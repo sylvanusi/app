@@ -44,6 +44,11 @@ public class CountryView extends BaseView<Country>
 	{
 		super(dialog, dg);
 	}
+	public CountryView (Dialog dg, JpaRepository repository)
+	{
+		super(dg,repository);
+		this.countryRepository = (CountryRepository) repository;
+	}
 	
 
 	

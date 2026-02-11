@@ -13,6 +13,7 @@ import com.more.app.base.ui.setup.BankCrudView;
 import com.more.app.entity.Bank;
 import com.more.app.entity.product.Party;
 import com.more.app.repository.product.PartyRepository;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -40,7 +41,11 @@ public class PartyView  extends BaseView<Party> {
 		super(dialogSelectEntity, dg);
 	}
 	
-
+	public <T> PartyView(Dialog dg, JpaRepository repository)
+	{
+		super(dg, repository);
+		this.repository = (PartyRepository) repository;
+	}
 	public <T> PartyView(DialogSelectEntity dialog, Dialog dg, JpaRepository repository)
 	{
 		super(dialog, dg, repository);
@@ -74,6 +79,15 @@ public class PartyView  extends BaseView<Party> {
 
 	@Override
 	public void reloadView() {
+		System.out.println("Reloading Party View");
+		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
+	}
+	
+	@Override
+	protected void onAttach(AttachEvent attachEvent)
+	{
+		System.out.println("Attaching Party View");
+		
 		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
 	}
 

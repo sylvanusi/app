@@ -22,8 +22,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 @Route(value = CustomerView.pageUrlString, layout = LeftAlignedLayout.class)
-public class CustomerView extends BaseView<Customer>
-{
+public class CustomerView extends BaseView<Customer> {
 	public static final String pageUrlString = "customer-view";
 	public static final Long resourceAdd = Long.valueOf(34L);
 	public static final Long resourceEdit = Long.valueOf(35L);
@@ -32,30 +31,31 @@ public class CustomerView extends BaseView<Customer>
 	private Select<Boolean> correspondentBox;
 	public Select<String> customerTypeTF;
 	private TextField customerNoTF;
-	
+
 	@Autowired
 	private CustomerRepository repository;
 
-	public CustomerView()
-	{
+	public CustomerView() {
 		super();
 		view = this;
 	}
 
-	public CustomerView(DialogSelectEntity dialog, Dialog dg)
-	{
+	public CustomerView(DialogSelectEntity dialog, Dialog dg) {
 		super(dialog, dg);
 	}
 
-	public <T> CustomerView(DialogSelectEntity dialog, Dialog dg, JpaRepository repository)
-	{
+	public <T> CustomerView(Dialog dg, JpaRepository repository) {
+		super(dg, repository);
+		this.repository = (CustomerRepository) repository;
+	}
+
+	public <T> CustomerView(DialogSelectEntity dialog, Dialog dg, JpaRepository repository) {
 		super(dialog, dg, repository);
-		this.repository = (CustomerRepository) repository;	
+		this.repository = (CustomerRepository) repository;
 	}
 
 	@Override
-	public void loadComponents()
-	{
+	public void loadComponents() {
 		fullNameTF = new TextField();
 		fullNameTF.setMaxLength(50);
 		fullNameTF.setLabel(UIActionUtil.getFieldLabel(Customer.class, "fullName"));
@@ -81,23 +81,19 @@ public class CustomerView extends BaseView<Customer>
 				.setHeader(UIActionUtil.getFieldLabel(Customer.class, "correspondent"));
 
 		hlsearch.add(fullNameTF, customerNoTF, customerTypeTF, searchb);
-		hlsearch.setVerticalComponentAlignment(Alignment.BASELINE, fullNameTF, customerNoTF, customerTypeTF,
-				 searchb);
+		hlsearch.setVerticalComponentAlignment(Alignment.BASELINE, fullNameTF, customerNoTF, customerTypeTF, searchb);
 
 		addBaseComponentsandStyle();
 
-		searchb.addClickListener(new ComponentEventListener<ClickEvent<Button>>()
-		{
+		searchb.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onComponentEvent(ClickEvent<Button> event)
-			{
+			public void onComponentEvent(ClickEvent<Button> event) {
 				grid.setItems(new ArrayList<Customer>());
 
 				String customerType = customerTypeTF.getValue();
-				if (null != customerType)
-				{
+				if (null != customerType) {
 					if (customerType.trim().isEmpty())
 						customerType = null;
 					if (customerType.trim().equals("Customer"))
@@ -110,28 +106,25 @@ public class CustomerView extends BaseView<Customer>
 				String customerNo = customerNoTF.getValue();
 				Boolean correspondent = correspondentBox.getValue();
 
-				grid.setItems(repository.findByFullNameStartsWithAndCustomerNoStartsWithAndCustomerTypeStartsWith(fullName, customerNo, customerType));//, correspondent
+				grid.setItems(repository.findByFullNameStartsWithAndCustomerNoStartsWithAndCustomerTypeStartsWith(
+						fullName, customerNo, customerType));// , correspondent
 			}
 
 		});
 	}
 
 	@Override
-	protected void onAttach(AttachEvent attachEvent)
-	{
+	protected void onAttach(AttachEvent attachEvent) {
 		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
 	}
 
 	@Override
-	public void reloadView()
-	{
+	public void reloadView() {
 		grid.setItems(repository.findAll(Sort.by(Sort.Direction.DESC, "id")));
 	}
-	
-	public void updateGrid(CustomerView view)
-	{
-		if(view.customerTypeTF.getValue() != null && !view.customerTypeTF.getValue().isBlank())
-		{
+
+	public void updateGrid(CustomerView view) {
+		if (view.customerTypeTF.getValue() != null && !view.customerTypeTF.getValue().isBlank()) {
 			view.grid.setItems(new ArrayList<>());
 			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			System.out.println(view.repository.findByCustomerType(view.customerTypeTF.getValue()).size());
@@ -142,32 +135,27 @@ public class CustomerView extends BaseView<Customer>
 	}
 
 	@Override
-	public boolean getAddPermission()
-	{
+	public boolean getAddPermission() {
 		return true;
 	}
 
 	@Override
-	public boolean getEditPermission()
-	{
+	public boolean getEditPermission() {
 		return true;
 	}
 
 	@Override
-	public boolean getViewPermission()
-	{
+	public boolean getViewPermission() {
 		return true;
 	}
 
 	@Override
-	public void navigationAction(String param)
-	{
+	public void navigationAction(String param) {
 		getUI().ifPresent(ui -> ui.navigate(CustomerCrudView.class, param));
 	}
 
 	@Override
-	public String getDialogTitle()
-	{
+	public String getDialogTitle() {
 		return "Search Customer";
 	}
 }

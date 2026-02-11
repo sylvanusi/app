@@ -3,6 +3,8 @@ package com.more.app.base.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tinylog.Logger;
+
 import com.more.app.entity.AbstractPojo;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -19,7 +21,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayoutVariant;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.server.VaadinSession;
 
 import jakarta.persistence.OptimisticLockException;
 
@@ -29,7 +30,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 	protected String pageMode = "";
 	protected Binder<T> binder;
 	protected VerticalLayout errorVl = new VerticalLayout();
-	protected VerticalLayout vl = new VerticalLayout();
+	public VerticalLayout vl = new VerticalLayout();
 	protected BaseCrudComponent<T> ui;
 	protected H4 title = new H4();
 	private Div body = new Div();
@@ -37,6 +38,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 	public Hr hr1 = new Hr();
 	public HorizontalLayout hl = new HorizontalLayout();
 	public HorizontalLayout hlheader = new HorizontalLayout();
+	public boolean fromDialogue = false;
 
 	@SuppressWarnings("unchecked")
 	public BaseCrudComponent() {
@@ -52,6 +54,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 
 		confirmButton = new Button("Save Record", new Icon(VaadinIcon.CHECK_SQUARE_O), event -> {
 			try {
+				
 				errorVl.removeAll();
 				ui.vl.remove(errorVl);
 
@@ -59,6 +62,8 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 				getBinder().validate();
 				List<String> erString = new ArrayList();
 				if (erString.isEmpty() && getBinder().validate().isOk()) {
+					Logger.info("From Dialogue " + fromDialogue);
+					Logger.info("About to save, binder is valid");
 					if (ui.getPageMode().equals("ADDNEW"))
 						entity.setId(null);
 					setEventEntityFields(entity);
@@ -67,7 +72,7 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 						return;
 					}
 
-					System.out.println(entity.toString());
+					Logger.info(entity.toString());
 
 					// entity.setAuditUser(CurrentUser.get());
 					// FacadeFactory.getFacade().store(entity);
@@ -83,7 +88,8 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 					updateFieldsOnSave();
 					ui.setPageMode("EDIT");
 					getBinder().setBean(entity);
-				} else {
+				} 			
+				else {
 					String caption = "";
 					for (int i = 0; i < erString.size(); i++) {
 						H1 errorLabel = new H1("");
@@ -93,6 +99,22 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 						ui.vl.addComponentAtIndex(0, errorVl);
 					}
 				}
+				
+				if(fromDialogue)
+				{
+					Logger.info("From Dialogue " + fromDialogue);	
+					Logger.info(entity.toString());
+					saveRecord(entity);
+					n.removeAll();
+					Div content = new Div();
+					// content.getClassNames().add("savenofication");
+					content.setText("Record Saved");
+					n.add(content);
+					n.setDuration(5000);
+					n.setPosition(Position.TOP_CENTER);
+					n.open();
+				}
+				
 			} catch (OptimisticLockException e) {
 				// FacadeFactory.getFacade().refresh(entity);
 			} catch (Exception e) {
@@ -235,4 +257,14 @@ public abstract class BaseCrudComponent<T extends AbstractPojo> extends Vertical
 	}
 
 	public abstract void saveRecord(T entity);
+
+
+	public boolean isFromDialogue() {
+		return fromDialogue;
+	}
+
+	public void setFromDialogue(boolean fromDialogue) {
+		this.fromDialogue = fromDialogue;
+	}
+	
 }
