@@ -25,6 +25,7 @@ import com.more.app.specification.LcMasterSpecification;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -126,7 +127,7 @@ public class LcMasterView extends BaseView<LcMaster> {
 		lcEventTF.setLabel("Current Event");
 		lcEventTF.setClearButtonVisible(true);
 		// Registered, PreAdvise, Issue, Amendment, Adjustment, Payment
-		lcEventTF.setItems("REGISTERED", "PRE ADVISE", "ISSUE", "AMENDMENT", "ADJUSTMENT", "PAYMENT");
+		lcEventTF.setItems("REGISTERED", "PREADVISED", "ISSUE", "AMENDMENT", "ADJUSTMENT", "PAYMENT");
 
 		preAdviseBtn = new Button("Pre Advise LC");
 		issueBtn = new Button("Issue LC");
@@ -306,9 +307,8 @@ public class LcMasterView extends BaseView<LcMaster> {
 					adjustmentBtn.setEnabled(false);
 					paymentBtn.setEnabled(false);
 				} else if (lc.getLcEvent().equals("PREADVISED")) {	
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 					preAdviseBtn.setEnabled(eventStatusCompleted);
-					issueBtn.setEnabled(false);
+					issueBtn.setEnabled(true);
 					amendmentBtn.setEnabled(false);
 					adjustmentBtn.setEnabled(false);
 					paymentBtn.setEnabled(false);
@@ -366,6 +366,10 @@ public class LcMasterView extends BaseView<LcMaster> {
 				ui.navigate(LcPreAdviseForm.class, "PRE_ADVISE" + "," + getSelectedItemId());
 			}
 		}));
+		
+		issueBtn.addClickListener(evt -> {
+			getUI().ifPresent(ui -> ui.navigate(ImportLetterOfCreditIssueForm.class, "ISSUE" + "," + getSelectedItemId()));
+		});
 
 		Logger.info("LC Master search components loaded successfully");
 	}

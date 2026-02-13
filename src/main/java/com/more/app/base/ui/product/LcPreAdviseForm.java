@@ -35,6 +35,7 @@ import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -83,7 +84,7 @@ public class LcPreAdviseForm extends VerticalLayout implements HasUrlParameter<S
 
 	private HorizontalLayout hlheader = new HorizontalLayout();
 	private HorizontalLayout hlFooter = new HorizontalLayout();
-	public Button closeButton, validateButton, saveButton, sunmitButton, declineButton, cancelButton;
+	public Button closeButton, validateButton, saveButton, submitButton, declineButton, cancelButton;
 
 	private VerticalLayout bodyVl = new VerticalLayout();
 
@@ -126,7 +127,7 @@ public class LcPreAdviseForm extends VerticalLayout implements HasUrlParameter<S
 		});
 
 		saveButton = new Button("Save", new Icon(VaadinIcon.CHECK_CIRCLE_O));
-		sunmitButton = new Button("Submit", new Icon(VaadinIcon.CHECK));
+		submitButton = new Button("Submit", new Icon(VaadinIcon.CHECK));
 		declineButton = new Button("Decline", new Icon(VaadinIcon.ARROW_CIRCLE_DOWN_O));
 		cancelButton = new Button("Cancel", new Icon(VaadinIcon.MINUS_CIRCLE_O));
 		validateButton = new Button("Validate", new Icon(VaadinIcon.CHECK_SQUARE_O));
@@ -142,7 +143,7 @@ public class LcPreAdviseForm extends VerticalLayout implements HasUrlParameter<S
 		hrFooter.setWidthFull();
 
 		hlFooter.setSizeFull();
-		hlFooter.add(validateButton, saveButton, sunmitButton, declineButton, cancelButton, closeButton);
+		hlFooter.add(validateButton, saveButton, submitButton, declineButton, cancelButton, closeButton);
 
 		bodyVl.setSizeFull();
 		bodyVl.setSpacing(true);
@@ -575,6 +576,7 @@ public class LcPreAdviseForm extends VerticalLayout implements HasUrlParameter<S
 			if (entity.getAdvisingBankBicCode() != null)
 				entity.setReceiverBic(entity.getAdvisingBankBicCode());
 			preAdviseService.savePreAdvise(entity);
+			Notification.show("Readvise record saved for update", 2000, Position.TOP_CENTER);
 		});
 	}
 

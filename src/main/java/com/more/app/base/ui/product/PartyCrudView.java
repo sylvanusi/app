@@ -62,7 +62,7 @@ public class PartyCrudView extends BaseCrudComponent<Party> implements HasUrlPar
 	private TextField identifierCountryCode;
 	private TextField identifier;
 
-	private ComboBox<String> swiftPartyType;
+	public ComboBox<String> swiftPartyType;
 	private Binder<Party> binder;
 	private FormLayout formLayout = new FormLayout();
 	

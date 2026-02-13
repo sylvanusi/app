@@ -13,12 +13,19 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 @Entity
 public class ImportLetterOfCreditIssue  extends AbstractPojo
 {
-	private Long lcMasterId;
+	private static final long serialVersionUID = 1L;
+
+	private Long lcMasterId;	
 	
+	@Transient
+	private Register register;
+	@Transient
+	private LcMaster lcMaster;
 	@Column(length = 11)
 	@UIAction(label = "Sender BIC")
 	private String senderBic;
@@ -34,7 +41,6 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 	@Column(length = 16)
 	@UIAction(label = "Documentary Credit No")
 	private String documentaryCrNo;
-
 	
 	@Column(length = 16)
 	@UIAction(label = "Pre-Advice Reference")
@@ -64,15 +70,32 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 	@UIAction(label = "Applicant Bank")	
 	private Party applicantBank;
 	
+	@Transient
+	private String applicantBankDetails;
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Applicant")
 	private Party applicant;
+	
+	@Transient
+	private String applicantDetails;
+	
+
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Beneficiary")
 	private Party beneficiary;
+	@Transient
+	private String beneficiaryDetails;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(referencedColumnName = "id")
+	@UIAction(label = "Advising Bank")
+	private Party advisingBank;
+	@Transient
+	private String advisingBankDetails;
 
 	@Column(length = 3)
 	@UIAction(label = "Currency")
@@ -93,12 +116,15 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 	@Column(length = 140)
 	@UIAction(label = "Additional Amounts Covered")
 	private String additionalAmountsCovered;
-
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName = "id")
-	@UIAction(label = "Available With ... By ...")
-	private Party availableWithBy;
+	@UIAction(label = "Available With By")
+	private Party availableWithByParty;
+	@Transient
+	private String availableWithByDetails;
 
+	
 	@Column(length = 140)
 	@UIAction(label = "Drafts At")
 	private String draftsAt;
@@ -107,6 +133,10 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Drawee")
 	private Party drawee;
+	
+
+	@Transient
+	private String draweeDetails;
 
 	@Column(length = 140)
 	@UIAction(label = "Mixed Payment")
@@ -202,11 +232,19 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Requested Confirmation Party")
 	private Party requestedConfirmationParty;
+	
+
+	@Transient
+	private String requestedConfirmationDetails;
+	
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Reimbursing Bank")
 	private Party reimbursingBankParty;
+	
+	@Transient
+	private String reimbursingBankDetails;
 
 	@Lob
 	@Column(nullable = true)
@@ -217,6 +255,9 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 	@JoinColumn(referencedColumnName = "id")
 	@UIAction(label = "Advise Through Bank")
 	private Party advThrBankParty;
+	
+	@Transient
+	private String advThrBankDetails;
 
 	@Lob
 	@Column(nullable = true)
@@ -368,13 +409,7 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 		return additionalAmountsCovered;
 	}
 
-	/**
-	 * @return the availableWithBy
-	 */
-	public Party getAvailableWithBy()
-	{
-		return availableWithBy;
-	}
+	
 
 	/**
 	 * @return the draftsAt
@@ -729,13 +764,6 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 		this.additionalAmountsCovered = additionalAmountsCovered;
 	}
 
-	/**
-	 * @param availableWithBy the availableWithBy to set
-	 */
-	public void setAvailableWithBy(Party availableWithBy)
-	{
-		this.availableWithBy = availableWithBy;
-	}
 
 	/**
 	 * @param draftsAt the draftsAt to set
@@ -945,35 +973,153 @@ public class ImportLetterOfCreditIssue  extends AbstractPojo
 		this.senderToReceiverInfo = senderToReceiverInfo;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "ImportLetterOfCreditIssue [id=" + id + ", senderBic=" + senderBic + ", receiverBic=" + receiverBic
-				+ ", formOfDocumentaryCr=" + formOfDocumentaryCr + ", documentaryCrNo=" + documentaryCrNo
-				+ ", referenceToPreAdvice=" + referenceToPreAdvice + ", dateOfIssue=" + dateOfIssue
-				+ ", applicableRules=" + applicableRules + ", applicableRulesNarrative=" + applicableRulesNarrative
-				+ ", dateOfExpiry=" + dateOfExpiry + ", placeOfExpiry=" + placeOfExpiry + ", applicantBank="
-				+ applicantBank + ", applicant=" + applicant + ", beneficiary=" + beneficiary + ", currencyCode="
-				+ currencyCode + ", amountOfDocumentaryCredit=" + amountOfDocumentaryCredit + ", tolerance1="
-				+ tolerance1 + ", tolerance2=" + tolerance2 + ", additionalAmountsCovered=" + additionalAmountsCovered
-				+ ", availableWithBy=" + availableWithBy + ", draftsAt=" + draftsAt + ", drawee=" + drawee
-				+ ", mixedPaymentDetails=" + mixedPaymentDetails + ", negotiationDeferredPaymentDetails="
-				+ negotiationDeferredPaymentDetails + ", partialShipments=" + partialShipments + ", transhipments="
-				+ transhipments + ", dispatchFrom=" + dispatchFrom + ", portOfLoading=" + portOfLoading
-				+ ", portOfDischarge=" + portOfDischarge + ", placeOfFinalDestination=" + placeOfFinalDestination
-				+ ", latestDateOfShipment=" + latestDateOfShipment + ", shipmentPeriod=" + shipmentPeriod
-				+ ", goodDesription=" + goodDesription + ", documentsRequired=" + documentsRequired
-				+ ", additionalConditions=" + additionalConditions + ", specialPaymentConditionBeneficiary="
-				+ specialPaymentConditionBeneficiary + ", specialPaymentConditionReceivingBank="
-				+ specialPaymentConditionReceivingBank + ", charges=" + charges + ", periodOfPresentationDays="
-				+ periodOfPresentationDays + ", periodOfPresentationNarrative=" + periodOfPresentationNarrative
-				+ ", confirmationInstructions=" + confirmationInstructions + ", requestedConfirmationParty="
-				+ requestedConfirmationParty + ", reimbursingBankParty=" + reimbursingBankParty
-				+ ", instructionsToPayBank=" + instructionsToPayBank + ", advThrBankParty=" + advThrBankParty
-				+ ", senderToReceiverInfo=" + senderToReceiverInfo + "]";
+	public Long getLcMasterId() {
+		return lcMasterId;
 	}
 
+	public void setLcMasterId(Long lcMasterId) {
+		this.lcMasterId = lcMasterId;
+	}
+
+	public Register getRegister() {
+		return register;
+	}
+
+	public void setRegister(Register register) {
+		this.register = register;
+	}
+
+	public LcMaster getLcMaster() {
+		return lcMaster;
+	}
+
+	public void setLcMaster(LcMaster lcMaster) {
+		this.lcMaster = lcMaster;
+	}
+
+	public Party getAdvisingBank() {
+		return advisingBank;
+	}
+
+	public void setAdvisingBank(Party advisingBank) {
+		this.advisingBank = advisingBank;
+	}
+
+	public String getApplicantBankDetails() {
+		return applicantBankDetails;
+	}
+
+	public void setApplicantBankDetails(String applicantBankDetails) {
+		this.applicantBankDetails = applicantBankDetails;
+	}
+
+	public String getApplicantDetails() {
+		return applicantDetails;
+	}
+
+	public void setApplicantDetails(String applicantDetails) {
+		this.applicantDetails = applicantDetails;
+	}
+
+	public String getBeneficiaryDetails() {
+		return beneficiaryDetails;
+	}
+
+	public void setBeneficiaryDetails(String beneficiaryDetails) {
+		this.beneficiaryDetails = beneficiaryDetails;
+	}
+
+	public String getAdvisingBankDetails() {
+		return advisingBankDetails;
+	}
+
+	public void setAdvisingBankDetails(String advisingBankDetails) {
+		this.advisingBankDetails = advisingBankDetails;
+	}
+
+	
+
+	public String getDraweeDetails() {
+		return draweeDetails;
+	}
+
+	public void setDraweeDetails(String draweeDetails) {
+		this.draweeDetails = draweeDetails;
+	}
+
+	public String getRequestedConfirmationDetails() {
+		return requestedConfirmationDetails;
+	}
+
+	public void setRequestedConfirmationDetails(String requestedConfirmationDetails) {
+		this.requestedConfirmationDetails = requestedConfirmationDetails;
+	}
+
+	public String getReimbursingBankDetails() {
+		return reimbursingBankDetails;
+	}
+
+	public void setReimbursingBankDetails(String reimbursingBankDetails) {
+		this.reimbursingBankDetails = reimbursingBankDetails;
+	}
+
+	public String getAdvThrBankDetails() {
+		return advThrBankDetails;
+	}
+
+	public void setAdvThrBankDetails(String advThrBankDetails) {
+		this.advThrBankDetails = advThrBankDetails;
+	}
+
+	public Party getAvailableWithByParty() {
+		return availableWithByParty;
+	}
+
+	public void setAvailableWithByParty(Party availableWithByParty) {
+		this.availableWithByParty = availableWithByParty;
+	}
+
+	public String getAvailableWithByDetails() {
+		return availableWithByDetails;
+	}
+
+	public void setAvailableWithByDetails(String availableWithByDetails) {
+		this.availableWithByDetails = availableWithByDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "ImportLetterOfCreditIssue [lcMasterId=" + lcMasterId + ", register=" + register + ", lcMaster="
+				+ lcMaster + ", senderBic=" + senderBic + ", receiverBic=" + receiverBic + ", formOfDocumentaryCr="
+				+ formOfDocumentaryCr + ", documentaryCrNo=" + documentaryCrNo + ", referenceToPreAdvice="
+				+ referenceToPreAdvice + ", dateOfIssue=" + dateOfIssue + ", applicableRules=" + applicableRules
+				+ ", applicableRulesNarrative=" + applicableRulesNarrative + ", dateOfExpiry=" + dateOfExpiry
+				+ ", placeOfExpiry=" + placeOfExpiry + ", applicantBank=" + applicantBank + ", applicantBankDetails="
+				+ applicantBankDetails + ", applicant=" + applicant + ", applicantDetails=" + applicantDetails
+				+ ", beneficiary=" + beneficiary + ", beneficiaryDetails=" + beneficiaryDetails + ", advisingBank="
+				+ advisingBank + ", advisingBankDetails=" + advisingBankDetails + ", currencyCode=" + currencyCode
+				+ ", amountOfDocumentaryCredit=" + amountOfDocumentaryCredit + ", tolerance1=" + tolerance1
+				+ ", tolerance2=" + tolerance2 + ", additionalAmountsCovered=" + additionalAmountsCovered
+				+ ", availableWithByParty=" + availableWithByParty + ", availableWithByDetails="
+				+ availableWithByDetails + ", draftsAt=" + draftsAt + ", drawee=" + drawee + ", draweeDetails="
+				+ draweeDetails + ", mixedPaymentDetails=" + mixedPaymentDetails
+				+ ", negotiationDeferredPaymentDetails=" + negotiationDeferredPaymentDetails + ", partialShipments="
+				+ partialShipments + ", transhipments=" + transhipments + ", dispatchFrom=" + dispatchFrom
+				+ ", portOfLoading=" + portOfLoading + ", portOfDischarge=" + portOfDischarge
+				+ ", placeOfFinalDestination=" + placeOfFinalDestination + ", latestDateOfShipment="
+				+ latestDateOfShipment + ", shipmentPeriod=" + shipmentPeriod + ", goodDesription=" + goodDesription
+				+ ", documentsRequired=" + documentsRequired + ", additionalConditions=" + additionalConditions
+				+ ", specialPaymentConditionBeneficiary=" + specialPaymentConditionBeneficiary
+				+ ", specialPaymentConditionReceivingBank=" + specialPaymentConditionReceivingBank + ", charges="
+				+ charges + ", periodOfPresentationDays=" + periodOfPresentationDays
+				+ ", periodOfPresentationNarrative=" + periodOfPresentationNarrative + ", confirmationInstructions="
+				+ confirmationInstructions + ", requestedConfirmationParty=" + requestedConfirmationParty
+				+ ", requestedConfirmationDetails=" + requestedConfirmationDetails + ", reimbursingBankParty="
+				+ reimbursingBankParty + ", reimbursingBankDetails=" + reimbursingBankDetails
+				+ ", instructionsToPayBank=" + instructionsToPayBank + ", advThrBankParty=" + advThrBankParty
+				+ ", advThrBankDetails=" + advThrBankDetails + ", senderToReceiverInfo=" + senderToReceiverInfo + "]";
+	}
+	
+	
+	
 }

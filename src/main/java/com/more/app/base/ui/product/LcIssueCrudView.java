@@ -390,7 +390,7 @@ public class LcIssueCrudView extends Dialog
 		//binder.forField(beneficiaryPDF).bind("beneficiary");
 		beneficiaryDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "beneficiary"));
 
-		Party availableWithBy = entity.getAvailableWithBy() != null ? entity.getAvailableWithBy() : new Party();
+		//Party availableWithBy = entity.getAvailableWithBy() != null ? entity.getAvailableWithBy() : new Party();
 		//availableWithByPDF = new PartyDetailsCrudView(availableWithBy);
 		//binder.forField(availableWithByPDF).bind("availableWithBy");
 		availableWithDtlsPanel = new CustomAccordionPanel(UILabelUtil.getFieldLabel(entity, "availableWithBy"));
